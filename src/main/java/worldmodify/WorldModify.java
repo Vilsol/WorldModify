@@ -28,7 +28,6 @@ public class WorldModify extends JavaPlugin {
 
 	private void listConfig() {
 		getLogger().info("Global limit is set to " + getConfig().getInt("Config.GlobalLimit") + " blocks per tick.");
-		getLogger().info("Local limit is set to " + getConfig().getInt("Config.LocalLimit") + " blocks per tick.");
 	}
 
 	private void loadConfig() {
