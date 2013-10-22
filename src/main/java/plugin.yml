@@ -1,0 +1,7 @@
+name: WorldModify
+main: worldmodify.WorldModify
+version: 1.0
+commands:
+   wm:
+      description: General WorldModify Command
+      usage: /<command>

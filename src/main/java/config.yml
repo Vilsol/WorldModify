@@ -1,0 +1,3 @@
+Config:
+  GlobalLimit: 1000
+  LocalLimit: 100
