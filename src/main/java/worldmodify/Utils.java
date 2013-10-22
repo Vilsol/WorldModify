@@ -3,8 +3,10 @@ package worldmodify;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class Utils {
 
@@ -31,24 +33,24 @@ public class Utils {
 	 * @return Location with lowest point
 	 */
 	public static Location getLowPoint(Location pos1, Location pos2) {
-		Location lowestPoint = pos1;
+		Location lowestPoint = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 		
-		if(pos1.getX() < pos2.getX()){
-			lowestPoint.setX(pos1.getX()); 
+		if(pos1.getBlockX() < pos2.getBlockX()){
+			lowestPoint.setX(pos1.getBlockX()); 
 		}else{
-			lowestPoint.setX(pos2.getX());
+			lowestPoint.setX(pos2.getBlockX());
 		}
 		
-		if(pos1.getY() < pos2.getY()){
-			lowestPoint.setX(pos1.getY()); 
+		if(pos1.getBlockY() < pos2.getBlockY()){
+			lowestPoint.setY(pos1.getBlockY()); 
 		}else{
-			lowestPoint.setX(pos2.getY());
+			lowestPoint.setY(pos2.getBlockY());
 		}
 		
-		if(pos1.getZ() < pos2.getZ()){
-			lowestPoint.setX(pos1.getZ()); 
+		if(pos1.getBlockZ() < pos2.getBlockZ()){
+			lowestPoint.setZ(pos1.getBlockZ()); 
 		}else{
-			lowestPoint.setX(pos2.getZ());
+			lowestPoint.setZ(pos2.getBlockZ());
 		}
 		
 		return lowestPoint;
@@ -61,24 +63,24 @@ public class Utils {
 	 * @return Location with highest point
 	 */
 	public static Location getHighestPoint(Location pos1, Location pos2) {
-		Location highestPoint = pos1;
+		Location highestPoint = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 		
-		if(pos1.getX() < pos2.getX()){
-			highestPoint.setX(pos1.getX()); 
+		if(pos1.getBlockX() > pos2.getBlockX()){
+			highestPoint.setX(pos1.getBlockX()); 
 		}else{
-			highestPoint.setX(pos2.getX());
+			highestPoint.setX(pos2.getBlockX());
 		}
 		
-		if(pos1.getY() < pos2.getY()){
-			highestPoint.setX(pos1.getY()); 
+		if(pos1.getBlockY() > pos2.getBlockY()){
+			highestPoint.setY(pos1.getBlockY()); 
 		}else{
-			highestPoint.setX(pos2.getY());
+			highestPoint.setY(pos2.getBlockY());
 		}
 		
-		if(pos1.getZ() < pos2.getZ()){
-			highestPoint.setX(pos1.getZ()); 
+		if(pos1.getBlockZ() > pos2.getBlockZ()){
+			highestPoint.setZ(pos1.getBlockZ()); 
 		}else{
-			highestPoint.setX(pos2.getZ());
+			highestPoint.setZ(pos2.getBlockZ());
 		}
 		
 		return highestPoint;
@@ -103,7 +105,8 @@ public class Utils {
 	 * @return Per session block limit.
 	 */
 	public static int getLocalLimit() {
-		return (int) Math.floor(WorldModify.config.getInt("Config.GlobalLimit") / WorldModify.placerSessions.size());
+		return 100;
+		//return (int) Math.floor(WorldModify.config.getInt("Config.GlobalLimit") / WorldModify.builderSessions.size());
 	}
 
 	/**
@@ -116,6 +119,15 @@ public class Utils {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Checks if the player has a WorldModify session
+	 * @param player Checked player
+	 * @return If player has a session
+	 */
+	public static boolean playerHasSession(Player player) {
+		return (WorldModify.playerSessions.containsKey(player));
 	}
 	
 }
