@@ -1,5 +1,6 @@
 package worldmodify;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,8 +26,8 @@ public class VirtualBlock {
 		loc = block.getLocation();
 		mat = block.getType();
 		data = block.getData();
-		if(block instanceof InventoryHolder){
-			inv = ((InventoryHolder) block).getInventory();
+		if(block.getState() instanceof InventoryHolder){
+			inv = ((InventoryHolder) block.getState()).getInventory();
 		}
 	}
 	
@@ -121,11 +122,19 @@ public class VirtualBlock {
 	 */
 	public void buildBlock(){
 		if(loc != null){
-			Block realBlock = loc.getBlock();
+			final Block realBlock = loc.getBlock();
 			realBlock.setType(mat);
-			if(data != null) realBlock.setData(data);
-			if(realBlock instanceof InventoryHolder){
-				((InventoryHolder) realBlock).getInventory().setContents(inv.getContents());
+			if(data != null){
+				realBlock.setData(data);
+			}else{
+				realBlock.setData((byte) 0);
+			}
+			if(inv != null){
+				if(realBlock.getState() instanceof InventoryHolder){
+					((InventoryHolder) realBlock.getState()).getInventory().setContents(inv.getContents());
+					realBlock.getState().update(true);
+					Bukkit.broadcastMessage("Inventory updated.");
+				}
 			}
 		}
 	}

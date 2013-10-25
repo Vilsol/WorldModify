@@ -20,6 +20,7 @@ public class WorldModify extends JavaPlugin {
 	public static Integer sessionCount;
 	public static Map<Integer, BuilderSession> builderSessions = new HashMap<Integer, BuilderSession>();
 	public static Map<Player, PlayerSession> playerSessions = new HashMap<Player, PlayerSession>();
+	public static Integer limit = 10;
 	
 	public void onEnable(){
 		loadConfig();
@@ -49,20 +50,47 @@ public class WorldModify extends JavaPlugin {
 				if(sender instanceof Player){
 					WMBukkit.createPlayerSession((Player) sender);
 					playerSessions.get(sender).setPos1(((Player) sender).getLocation());
+					sender.sendMessage(Utils.prefix + "Position 1 set!");
 				}
 			}else if(cmd.equalsIgnoreCase("pos2")){
 				if(sender instanceof Player){
 					WMBukkit.createPlayerSession((Player) sender);
 					playerSessions.get(sender).setPos2(((Player) sender).getLocation());
+					sender.sendMessage(Utils.prefix + "Position 2 set!");
 				}
 			}else if(cmd.equalsIgnoreCase("set")){
 				if(sender instanceof Player){
 					if(args.length >= 2){
-						WMBukkit.createPlayerSession((Player) sender);
-						VirtualBlock vb = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
-						List<VirtualBlock> blockList = WMBukkit.getVirtualCuboid(playerSessions.get(sender), vb);
-						BuilderSession bs = WMBukkit.makeBuilderSession(blockList, playerSessions.get(sender));
-						bs.build();
+						if(WMBukkit.getPlayerSession((Player) sender).hasSetPos()){
+							VirtualBlock vb = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
+							List<VirtualBlock> blockList = WMBukkit.getVirtualCuboid(playerSessions.get(sender), vb);
+							BuilderSession bs = WMBukkit.makeBuilderSession(blockList, playerSessions.get(sender));
+							bs.build();
+							PlayerNotify pn = new PlayerNotify((Player) sender, bs);
+							pn.infoMessage();
+							pn.runMessenger();
+						}
+					}
+				}
+			}else if(cmd.equalsIgnoreCase("replace")){
+				if(sender instanceof Player){
+					if(args.length >= 3){
+						if(WMBukkit.getPlayerSession((Player) sender).hasSetPos()){
+							VirtualBlock replace = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
+							VirtualBlock replacement = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[2])));
+							List<VirtualBlock> blockList = WMBukkit.getVirtualReplaceCuboid(playerSessions.get(sender), replace, replacement);
+							BuilderSession bs = WMBukkit.makeBuilderSession(blockList, playerSessions.get(sender));
+							bs.build();
+							PlayerNotify pn = new PlayerNotify((Player) sender, bs);
+							pn.infoMessage();
+							pn.runMessenger();
+						}
+					}
+				}
+			}else if(cmd.equalsIgnoreCase("limit")){
+				if(sender instanceof Player){
+					if(args.length >= 2){
+						limit = Integer.parseInt(args[1]);
 					}
 				}
 			}

@@ -1,45 +1,49 @@
 package worldmodify;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 
 public class BuilderSession {
 
-	private Location lowPoint;
-	private Location highPoint;
 	private List<VirtualBlock> blockList;
-	private boolean running = false;
+	private boolean done = false;
 	private Integer task;
 	private Integer totalBlocks;
-	private Integer builtBlocks;
+	private Integer builtBlocks = 0;
 	private boolean buildTransparent = false;
 	private boolean paused = false;
+	private PlayerSession playerSession;
 	
-	public BuilderSession(List<VirtualBlock> vb, Location pos1, Location pos2) {
-		lowPoint = Utils.getLowPoint(pos1, pos2);
-		highPoint = Utils.getHighestPoint(pos1, pos2);
-		totalBlocks = Utils.getTotalBlocks(lowPoint, highPoint);
+	public BuilderSession(List<VirtualBlock> vb) {
+		totalBlocks = vb.size();
 		blockList = vb;
+	}
+
+	public BuilderSession(List<VirtualBlock> vb, PlayerSession ps) {
+		totalBlocks = vb.size();
+		blockList = vb;
+		playerSession = ps;
 	}
 
 	/**
 	 * Starts the build process
 	 */
 	public void build(){
-		running = true;
+		done = false;
 		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(WorldModify.plugin, new Runnable(){
 			@Override
 			public void run() {
 				if(!paused){
 					int blockCount = 0;
 					boolean hasNoSolid = true;
-					List<VirtualBlock> toRemove = new ArrayList<VirtualBlock>();
+					Iterator<VirtualBlock> i = blockList.iterator();
 					
 					if(blockList != null && blockList.size() > 0){
-						for(VirtualBlock vb : blockList){
+						while(i.hasNext()){
+							VirtualBlock vb = i.next();
+
 							if(Utils.getLocalLimit() == blockCount){
 								hasNoSolid = false;
 								break;
@@ -49,29 +53,28 @@ public class BuilderSession {
 								hasNoSolid = false;
 								vb.buildBlock();
 								blockCount++;
-								//builtBlocks++;
 							}else{
 								if(buildTransparent){
 									vb.buildBlock();
 									blockCount++;
-									//builtBlocks++;
 								}
 							}
-							
-							toRemove.add(vb);
+
+							i.remove();
 						}
+						builtBlocks += blockCount;
 					}else{
+						if(playerSession != null) playerSession.getPlayer().sendMessage(Utils.prefix + "Done!");
 						Bukkit.getScheduler().cancelTask(task);
-						running = false;
+						done = true;
 					}
 					
 					if(hasNoSolid){
 						buildTransparent = true;
 					}
 					
-					for(VirtualBlock vb : toRemove){
-						blockList.remove(vb);
-					}
+				}else{
+					Bukkit.getScheduler().cancelTask(task);
 				}
 			}
 		}, 1L, 1L);
@@ -79,10 +82,10 @@ public class BuilderSession {
 	
 	/**
 	 * Checks if the builder is running
-	 * @return is the 
+	 * @return Is done 
 	 */
 	public boolean isDone(){
-		return !running;
+		return done;
 	}
 	
 	/**
@@ -99,6 +102,37 @@ public class BuilderSession {
 	 */
 	public Integer getBuiltBlocks(){
 		return builtBlocks;
+	}
+	
+	/**
+	 * Returns the player who initiated the builder
+	 * @return Player session or null
+	 */
+	public PlayerSession getPlayerSession(){
+		return playerSession;
+	}
+	
+	/**
+	 * Returns if the builder is paused
+	 * @return Is paused
+	 */
+	public boolean isPaused(){
+		return paused;
+	}
+	
+	/**
+	 * Pauses the builder
+	 */
+	public void pause(){
+		paused = true;
+	}
+	
+	/**
+	 * Unpauses the builder
+	 */
+	public void unpause(){
+		paused = false;
+		build();
 	}
 	
 }

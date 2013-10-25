@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 public class WMBukkit {
 
@@ -16,8 +15,8 @@ public class WMBukkit {
 	 * @param pos2 Second position
 	 * @return The placer session
 	 */
-	public static BuilderSession makeBuilderSession(List<VirtualBlock> vb, Location pos1, Location pos2){
-		BuilderSession bs = new BuilderSession(vb, pos1, pos2);
+	public static BuilderSession makeBuilderSession(List<VirtualBlock> vb){
+		BuilderSession bs = new BuilderSession(vb);
 		return bs;
 	}
 	
@@ -28,7 +27,7 @@ public class WMBukkit {
 	 * @return The placer session
 	 */
 	public static BuilderSession makeBuilderSession(List<VirtualBlock> vb, PlayerSession ps){
-		BuilderSession bs = new BuilderSession(vb, ps.getPos1(), ps.getPos2());
+		BuilderSession bs = new BuilderSession(vb, ps);
 		return bs;
 	}
 	
@@ -46,8 +45,8 @@ public class WMBukkit {
 		for(int Y = low.getBlockY(); Y <= high.getBlockY(); Y++){
 			for(int X = low.getBlockX(); X <= high.getBlockX(); X++){
 				for(int Z = low.getBlockZ(); Z <= high.getBlockZ(); Z++){
-					VirtualBlock newBlock = vb;
-					newBlock.setLocation(pos1.add(new Vector(X, Y, Z)));
+					VirtualBlock newBlock = new VirtualBlock(vb);
+					newBlock.setLocation(new Location(low.getWorld(), X, Y, Z));
 					blockList.add(newBlock);
 				}
 			}
@@ -63,20 +62,45 @@ public class WMBukkit {
 	 * @return List of virtual blocks
 	 */
 	public static List<VirtualBlock> getVirtualCuboid(PlayerSession ps, VirtualBlock vb){
+		return WMBukkit.getVirtualCuboid(ps.getPos1(), ps.getPos2(), vb);
+	}
+	
+	/**
+	 * Creates a new list of blocks that replace existing
+	 * @param pos1 First Position
+	 * @param pos2 Second Position
+	 * @param replace Block to replace
+	 * @param replacement Replacement Block
+	 * @return List of virtual blocks
+	 */
+	public static List<VirtualBlock> getVirtualReplaceCuboid(Location pos1, Location pos2, VirtualBlock replace, VirtualBlock replacement){
 		List<VirtualBlock> blockList = new ArrayList<VirtualBlock>();
-		Location low = Utils.getLowPoint(ps.getPos1(), ps.getPos2());
-		Location high = Utils.getHighestPoint(ps.getPos1(), ps.getPos2());
+		Location low = Utils.getLowPoint(pos1, pos2);
+		Location high = Utils.getHighestPoint(pos1, pos2);
 		for(int Y = low.getBlockY(); Y <= high.getBlockY(); Y++){
 			for(int X = low.getBlockX(); X <= high.getBlockX(); X++){
 				for(int Z = low.getBlockZ(); Z <= high.getBlockZ(); Z++){
-					VirtualBlock newBlock = new VirtualBlock(vb);
-					newBlock.setLocation(new Location(low.getWorld(), X, Y, Z));
-					blockList.add(newBlock);
+					VirtualBlock checkRep = new VirtualBlock(low.getWorld().getBlockAt(X, Y, Z));
+					if(checkRep.getMaterial().equals(replace.getMaterial())){
+						VirtualBlock newBlock = new VirtualBlock(replacement);
+						newBlock.setLocation(new Location(low.getWorld(), X, Y, Z));
+						blockList.add(newBlock);
+					}
 				}
 			}
 		}
-		
 		return blockList;
+	}
+	
+	/**
+	 * Creates a new list of blocks that replace existing
+	 * @param ps Player Session
+	 * @param replace Block to replace
+	 * @param replacement Replacement Block
+	 * @return List of virtual blocks
+	 */
+	public static List<VirtualBlock> getVirtualReplaceCuboid(PlayerSession ps, VirtualBlock replace, VirtualBlock replacement){
+		return WMBukkit.getVirtualReplaceCuboid(ps.getPos1(), ps.getPos2(), replace, replacement);
 	}
 
 	/**
@@ -88,5 +112,14 @@ public class WMBukkit {
 		if(Utils.playerHasSession(player)) return WorldModify.playerSessions.get(player);
 		PlayerSession ps = new PlayerSession(player);
 		return ps;
+	}
+	
+	/**
+	 * Returns the player session
+	 * @param player Player
+	 * @return Player Session
+	 */
+	public static PlayerSession getPlayerSession(Player player){
+		return createPlayerSession(player);
 	}
 }

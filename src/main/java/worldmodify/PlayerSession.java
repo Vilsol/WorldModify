@@ -1,5 +1,8 @@
 package worldmodify;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -8,6 +11,7 @@ public class PlayerSession {
 	private Player plr;
 	private Location pos1;
 	private Location pos2;
+	private List<List<VirtualBlock>> history = new ArrayList<List<VirtualBlock>>();
 	
 	public PlayerSession(Player player) {
 		plr = player;
@@ -54,4 +58,39 @@ public class PlayerSession {
 		pos2 = location;
 	}
 
+	/**
+	 * Checks whether the player has both positions set
+	 * @return True if set
+	 */
+	public boolean hasSetPos(){
+		return (pos1 != null && pos2 != null);
+	}
+	
+	/**
+	 * Returns the player history
+	 * @return Returns history
+	 */
+	public List<List<VirtualBlock>> getHistory(){
+		return history;
+	}
+	
+	/**
+	 * Adds a block list to the player history 
+	 * @param blockList VirtualBlock list
+	 */
+	public void addToHistory(List<VirtualBlock> blockList){
+		history.add(blockList);
+	}
+	
+	/**
+	 * Clears the players history
+	 */
+	public void clearHistory(){
+		history.clear();
+	}
+	
+	public void undoHistory(){
+		
+	}
+	
 }

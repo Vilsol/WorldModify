@@ -4,12 +4,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
 
 public class Utils {
 
+	public static String prefix = ChatColor.GOLD + "[WM] " + ChatColor.AQUA;
+	public static String prefixe = ChatColor.GOLD + "[WM] " + ChatColor.DARK_RED;
 	private static List<Material> transparentBlocks = Arrays.asList(Material.ACTIVATOR_RAIL, Material.ANVIL, Material.BED, Material.BED_BLOCK, Material.BROWN_MUSHROOM, Material.CACTUS, Material.CAKE_BLOCK, Material.CROPS, Material.DEAD_BUSH, Material.DETECTOR_RAIL, Material.DIODE, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_OFF, Material.DRAGON_EGG, Material.ITEM_FRAME, Material.LADDER, Material.LAVA, Material.NETHER_WARTS, Material.PAINTING, Material.POWERED_RAIL, Material.RAILS, Material.REDSTONE_COMPARATOR, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON, Material.REDSTONE_WIRE, Material.SAND, Material.SAPLING, Material.SEEDS, Material.SIGN, Material.SIGN_POST, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.SUGAR_CANE_BLOCK, Material.TORCH, Material.TRAP_DOOR, Material.TRIPWIRE, Material.TRIPWIRE_HOOK, Material.VINE, Material.WALL_SIGN, Material.WATER, Material.WATER_LILY);
 	
 	/**
@@ -105,7 +110,7 @@ public class Utils {
 	 * @return Per session block limit.
 	 */
 	public static int getLocalLimit() {
-		return 100;
+		return WorldModify.limit;
 		//return (int) Math.floor(WorldModify.config.getInt("Config.GlobalLimit") / WorldModify.builderSessions.size());
 	}
 
@@ -128,6 +133,41 @@ public class Utils {
 	 */
 	public static boolean playerHasSession(Player player) {
 		return (WorldModify.playerSessions.containsKey(player));
+	}
+	
+	/**
+	 * Checks if two virtual blocks are equal
+	 * @param b1 First Block
+	 * @param b2 Second block
+	 * @return If two blocks are equal
+	 */
+	public static boolean isSameVirtualBlock(VirtualBlock b1, VirtualBlock b2){
+		if(b1.getData() != b2.getData()) return false;
+		if(b1.getInventory() != b2.getInventory()) return false;
+		if(b1.getMaterial() != b2.getMaterial()) return false;
+		return true;
+	}
+
+	/**
+	 * Flashes the target block to bedrock
+	 * @param location Block location
+	 */
+	public static void flashBlock(Location location) {
+		final Block bl = location.getBlock();
+		final VirtualBlock vb = new VirtualBlock(bl);
+		if(bl.getState() instanceof InventoryHolder){
+			InventoryHolder ih = (InventoryHolder) bl.getState();
+			ih.getInventory().clear();
+		}
+		if(!bl.getType().equals(Material.GLOWSTONE)){
+			bl.setType(Material.GLOWSTONE);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(WorldModify.plugin, new Runnable(){
+				@Override
+				public void run() {
+					vb.buildBlock();
+				}
+			}, 10L);
+		}
 	}
 	
 }
