@@ -89,8 +89,14 @@ public class PlayerSession {
 		history.clear();
 	}
 	
-	public void undoHistory(){
-		
+	
+	public BuilderSession undoHistory(){
+		if(history.size() > 0 && history.get(history.size() - 1) != null){
+			BuilderSession bs = WMBukkit.makeBuilderSession(history.get(history.size() - 1), this);
+			history.remove(history.size() - 1);
+			return bs;
+		}
+		return null;
 	}
 	
 }

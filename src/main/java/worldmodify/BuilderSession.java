@@ -1,5 +1,6 @@
 package worldmodify;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class BuilderSession {
 	private boolean buildTransparent = false;
 	private boolean paused = false;
 	private PlayerSession playerSession;
+	private List<VirtualBlock> replaced = new ArrayList<VirtualBlock>();
+	private boolean saveUndo = true;
 	
 	public BuilderSession(List<VirtualBlock> vb) {
 		totalBlocks = vb.size();
@@ -26,7 +29,7 @@ public class BuilderSession {
 		blockList = vb;
 		playerSession = ps;
 	}
-
+	
 	/**
 	 * Starts the build process
 	 */
@@ -49,6 +52,8 @@ public class BuilderSession {
 								break;
 							}
 							
+							replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
+							
 							if(!Utils.isTransparent(vb)){
 								hasNoSolid = false;
 								vb.buildBlock();
@@ -64,7 +69,10 @@ public class BuilderSession {
 						}
 						builtBlocks += blockCount;
 					}else{
-						if(playerSession != null) playerSession.getPlayer().sendMessage(Utils.prefix + "Done!");
+						if(playerSession != null){
+							playerSession.getPlayer().sendMessage(Utils.prefix + "Done!");
+							if(saveUndo) playerSession.addToHistory(replaced);
+						}
 						Bukkit.getScheduler().cancelTask(task);
 						done = true;
 					}
@@ -133,6 +141,14 @@ public class BuilderSession {
 	public void unpause(){
 		paused = false;
 		build();
+	}
+	
+	/**
+	 * Set whether or not to save an undo
+	 * @param save Save or not
+	 */
+	public void saveUndo(boolean save){
+		saveUndo = save;
 	}
 	
 }

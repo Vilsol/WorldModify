@@ -69,6 +69,8 @@ public class WorldModify extends JavaPlugin {
 							PlayerNotify pn = new PlayerNotify((Player) sender, bs);
 							pn.infoMessage();
 							pn.runMessenger();
+						}else{
+							sender.sendMessage(Utils.prefixe + "Please set both positions!");
 						}
 					}
 				}
@@ -84,6 +86,8 @@ public class WorldModify extends JavaPlugin {
 							PlayerNotify pn = new PlayerNotify((Player) sender, bs);
 							pn.infoMessage();
 							pn.runMessenger();
+						}else{
+							sender.sendMessage(Utils.prefixe + "Please set both positions!");
 						}
 					}
 				}
@@ -91,6 +95,20 @@ public class WorldModify extends JavaPlugin {
 				if(sender instanceof Player){
 					if(args.length >= 2){
 						limit = Integer.parseInt(args[1]);
+						
+					}
+				}
+			}else if(cmd.equalsIgnoreCase("undo")){
+				if(sender instanceof Player){
+					BuilderSession bs = WMBukkit.getPlayerSession((Player) sender).undoHistory();
+					if(bs != null){
+						bs.saveUndo(false);
+						bs.build();
+						PlayerNotify pn = new PlayerNotify((Player) sender, bs);
+						pn.infoMessage();
+						pn.runMessenger();
+					}else{
+						sender.sendMessage(Utils.prefixe + "Nothing to undo!");
 					}
 				}
 			}

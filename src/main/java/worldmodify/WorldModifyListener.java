@@ -1,6 +1,5 @@
 package worldmodify;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -29,7 +28,6 @@ public class WorldModifyListener implements Listener {
 		if(plr.getItemInHand().getType().equals(Material.WOOD_HOE)){
 			Block target = evt.getPlayer().getTargetBlock(null, 100);
 			if(!target.isEmpty()){
-				Bukkit.broadcastMessage(evt.getAction().toString());
 				if(evt.getAction().equals(Action.RIGHT_CLICK_AIR) || evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
 					if(target.getLocation().equals(ps.getPos2())) return;
 					ps.setPos2(target.getLocation());
