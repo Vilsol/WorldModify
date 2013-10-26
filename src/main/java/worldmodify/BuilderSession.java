@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 
+import com.google.common.collect.Lists;
+
 public class BuilderSession {
 
 	private List<VirtualBlock> blockList;
@@ -86,6 +88,13 @@ public class BuilderSession {
 				}
 			}
 		}, 1L, 1L);
+	}
+	
+	/**
+	 * Reverses the block list
+	 */
+	public void reverseList(){
+		blockList = Lists.reverse(blockList);
 	}
 	
 	/**

@@ -1,5 +1,6 @@
 package worldmodify;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,16 @@ public class WorldModify extends JavaPlugin {
 		config = this.getConfig();
 		getServer().getPluginManager().registerEvents(new WorldModifyListener(), this);
 		listConfig();
+		loadMetrics();
+	}
+
+	private void loadMetrics() {
+		try {
+		    MetricsLite metrics = new MetricsLite(this);
+		    metrics.start();
+		} catch (IOException e) {
+		    getLogger().warning("Metrics failed to load!");
+		}
 	}
 
 	private void listConfig() {
@@ -65,6 +76,7 @@ public class WorldModify extends JavaPlugin {
 							VirtualBlock vb = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
 							List<VirtualBlock> blockList = WMBukkit.getVirtualCuboid(playerSessions.get(sender), vb);
 							BuilderSession bs = WMBukkit.makeBuilderSession(blockList, playerSessions.get(sender));
+							if(Integer.parseInt(args[1]) == 0) bs.reverseList();
 							bs.build();
 							PlayerNotify pn = new PlayerNotify((Player) sender, bs);
 							pn.infoMessage();
@@ -103,6 +115,7 @@ public class WorldModify extends JavaPlugin {
 					BuilderSession bs = WMBukkit.getPlayerSession((Player) sender).undoHistory();
 					if(bs != null){
 						bs.saveUndo(false);
+						bs.reverseList();
 						bs.build();
 						PlayerNotify pn = new PlayerNotify((Player) sender, bs);
 						pn.infoMessage();
