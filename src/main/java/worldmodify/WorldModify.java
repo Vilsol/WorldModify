@@ -14,6 +14,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import worldmodify.Metrics.Graph;
+
 public class WorldModify extends JavaPlugin {
 
 	public static WorldModify plugin;
@@ -34,7 +36,16 @@ public class WorldModify extends JavaPlugin {
 
 	private void loadMetrics() {
 		try {
-		    MetricsLite metrics = new MetricsLite(this);
+		    Metrics metrics = new Metrics(this);
+		    
+		    Graph globalLimit = metrics.createGraph("Global block limit");
+		    globalLimit.addPlotter(new Metrics.Plotter() {
+				@Override
+				public int getValue() {
+					return limit;
+				}
+			});
+		    
 		    metrics.start();
 		} catch (IOException e) {
 		    getLogger().warning("Metrics failed to load!");
@@ -51,6 +62,8 @@ public class WorldModify extends JavaPlugin {
 		getConfig().setDefaults(defConfig);
 		getConfig().options().copyDefaults(true);
 		saveConfig();
+		
+		limit = getConfig().getInt("Config.GlobalLimit");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -59,20 +72,21 @@ public class WorldModify extends JavaPlugin {
 			String cmd = args[0];
 			if(cmd.equalsIgnoreCase("pos1")){
 				if(sender instanceof Player){
-					WMBukkit.createPlayerSession((Player) sender);
-					playerSessions.get(sender).setPos1(((Player) sender).getLocation());
+					PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
+					ps.setPos1(((Player) sender).getLocation());
 					sender.sendMessage(Utils.prefix + "Position 1 set!");
 				}
 			}else if(cmd.equalsIgnoreCase("pos2")){
 				if(sender instanceof Player){
-					WMBukkit.createPlayerSession((Player) sender);
-					playerSessions.get(sender).setPos2(((Player) sender).getLocation());
+					PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
+					ps.setPos2(((Player) sender).getLocation());
 					sender.sendMessage(Utils.prefix + "Position 2 set!");
 				}
 			}else if(cmd.equalsIgnoreCase("set")){
 				if(sender instanceof Player){
 					if(args.length >= 2){
-						if(WMBukkit.getPlayerSession((Player) sender).hasSetPos()){
+						PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
+						if(ps.hasSetPos()){
 							VirtualBlock vb = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
 							List<VirtualBlock> blockList = WMBukkit.getVirtualCuboid(playerSessions.get(sender), vb);
 							BuilderSession bs = WMBukkit.makeBuilderSession(blockList, playerSessions.get(sender));
@@ -89,7 +103,8 @@ public class WorldModify extends JavaPlugin {
 			}else if(cmd.equalsIgnoreCase("replace")){
 				if(sender instanceof Player){
 					if(args.length >= 3){
-						if(WMBukkit.getPlayerSession((Player) sender).hasSetPos()){
+						PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
+						if(ps.hasSetPos()){
 							VirtualBlock replace = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
 							VirtualBlock replacement = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[2])));
 							List<VirtualBlock> blockList = WMBukkit.getVirtualReplaceCuboid(playerSessions.get(sender), replace, replacement);
@@ -106,8 +121,13 @@ public class WorldModify extends JavaPlugin {
 			}else if(cmd.equalsIgnoreCase("limit")){
 				if(sender instanceof Player){
 					if(args.length >= 2){
-						limit = Integer.parseInt(args[1]);
-						
+						if(Utils.isInteger(args[1])){
+							limit = Integer.parseInt(args[1]);
+							getConfig().set("Config.GlobalLimit", limit);
+							saveConfig();
+						}else{
+							sender.sendMessage(Utils.prefixe + "Limit must be a number!");
+						}
 					}
 				}
 			}else if(cmd.equalsIgnoreCase("undo")){
