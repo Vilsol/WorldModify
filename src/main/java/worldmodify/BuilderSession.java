@@ -37,6 +37,7 @@ public class BuilderSession {
 	 */
 	public void build(){
 		done = false;
+		WorldModify.builderSessions.add(this);
 		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(WorldModify.plugin, new Runnable(){
 			@Override
 			public void run() {
@@ -75,6 +76,7 @@ public class BuilderSession {
 							playerSession.getPlayer().sendMessage(Utils.prefix + "Done!");
 							if(saveUndo) playerSession.addToHistory(replaced);
 						}
+						WorldModify.builderSessions.remove(this);
 						Bukkit.getScheduler().cancelTask(task);
 						done = true;
 					}
@@ -84,6 +86,7 @@ public class BuilderSession {
 					}
 					
 				}else{
+					WorldModify.builderSessions.remove(this);
 					Bukkit.getScheduler().cancelTask(task);
 				}
 			}

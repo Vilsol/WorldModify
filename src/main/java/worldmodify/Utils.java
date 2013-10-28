@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -110,8 +111,8 @@ public class Utils {
 	 * @return Per session block limit.
 	 */
 	public static int getLocalLimit() {
-		return WorldModify.limit;
-		//return (int) Math.floor(WorldModify.config.getInt("Config.GlobalLimit") / WorldModify.builderSessions.size());
+		if(WorldModify.builderSessions == null || WorldModify.builderSessions.size() == 0) return WorldModify.limit;
+		return (int) Math.floor(WorldModify.limit / WorldModify.builderSessions.size());
 	}
 
 	/**
@@ -168,6 +169,26 @@ public class Utils {
 				}
 			}, 10L);
 		}
+	}
+
+	/**
+	 * Sends a message to sender that he has to be a player to use this command.
+	 * @param sender Target sender
+	 * @param string Command name
+	 * @return
+	 */
+	public static void requirePlayer(CommandSender sender, String cmd) {
+		sender.sendMessage(Utils.prefixe + "You must be a player to use " + ChatColor.RED + cmd + ChatColor.DARK_RED + "!");
+	}
+
+	/**
+	 * Sends a message to sender that he has no permission to use a command
+	 * @param sender Target sender
+	 * @return 
+	 */
+	public static boolean noPerms(CommandSender sender) {
+		sender.sendMessage(Utils.prefixe + "You don't have permission to do this command!");
+		return true;
 	}
 	
 }

@@ -2,6 +2,17 @@ name: WorldModify
 main: worldmodify.WorldModify
 version: 1.0
 commands:
-   wm:
-      description: General WorldModify Command
+   .limit:
+      usage: /<command> <amount>
+   .pos1:
       usage: /<command>
+   .pos2:
+      usage: /<command>
+   .replace:
+      usage: /<command> <block> <block>
+   .set:
+      usage: /<command> <block>
+   .undo:
+      usage: /<command>
+   .replacenear:
+      usage: /<command> <distance> <block> <block>

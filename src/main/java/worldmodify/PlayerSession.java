@@ -89,7 +89,10 @@ public class PlayerSession {
 		history.clear();
 	}
 	
-	
+	/**
+	 * Returns the last undo from the players history
+	 * @return Last undo or null
+	 */
 	public BuilderSession undoHistory(){
 		if(history.size() > 0 && history.get(history.size() - 1) != null){
 			BuilderSession bs = WMBukkit.makeBuilderSession(history.get(history.size() - 1), this);
