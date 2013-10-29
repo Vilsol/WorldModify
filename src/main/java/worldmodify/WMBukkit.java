@@ -73,23 +73,8 @@ public class WMBukkit {
 	 * @param replacement Replacement Block
 	 * @return List of virtual blocks
 	 */
-	public static List<VirtualBlock> getVirtualReplaceCuboid(Location pos1, Location pos2, VirtualBlock replace, VirtualBlock replacement){
-		List<VirtualBlock> blockList = new ArrayList<VirtualBlock>();
-		Location low = Utils.getLowPoint(pos1, pos2);
-		Location high = Utils.getHighestPoint(pos1, pos2);
-		for(int Y = low.getBlockY(); Y <= high.getBlockY(); Y++){
-			for(int X = low.getBlockX(); X <= high.getBlockX(); X++){
-				for(int Z = low.getBlockZ(); Z <= high.getBlockZ(); Z++){
-					VirtualBlock checkRep = new VirtualBlock(low.getWorld().getBlockAt(X, Y, Z));
-					if(checkRep.getMaterial().equals(replace.getMaterial())){
-						VirtualBlock newBlock = new VirtualBlock(replacement);
-						newBlock.setLocation(new Location(low.getWorld(), X, Y, Z));
-						blockList.add(newBlock);
-					}
-				}
-			}
-		}
-		return blockList;
+	public static ReplaceFinder getVirtualReplaceCuboid(Location pos1, Location pos2, VirtualBlock replace, VirtualBlock replacement){
+		return new ReplaceFinder(pos1, pos2, replace, replacement);
 	}
 	
 	/**
@@ -99,8 +84,8 @@ public class WMBukkit {
 	 * @param replacement Replacement Block
 	 * @return List of virtual blocks
 	 */
-	public static List<VirtualBlock> getVirtualReplaceCuboid(PlayerSession ps, VirtualBlock replace, VirtualBlock replacement){
-		return WMBukkit.getVirtualReplaceCuboid(ps.getPos1(), ps.getPos2(), replace, replacement);
+	public static ReplaceFinder getVirtualReplaceCuboid(PlayerSession ps, VirtualBlock replace, VirtualBlock replacement){
+		return new ReplaceFinder(ps.getPos1(), ps.getPos2(), replace, replacement, ps);
 	}
 
 	/**
