@@ -1,16 +1,13 @@
 package worldmodify.Commands;
 
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import worldmodify.BuilderSession;
-import worldmodify.PlayerNotify;
 import worldmodify.PlayerSession;
+import worldmodify.ReplaceFinder;
 import worldmodify.Utils;
 import worldmodify.VirtualBlock;
 import worldmodify.WMBukkit;
@@ -28,13 +25,7 @@ public class CommandReplace implements CommandExecutor {
 					VirtualBlock replace = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[0])));
 					VirtualBlock replacement = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
 					sender.sendMessage(Utils.prefix + "Detecting replacements...");
-					List<VirtualBlock> blockList = WMBukkit.getVirtualReplaceCuboid(ps, replace, replacement);
-					BuilderSession bs = WMBukkit.makeBuilderSession(blockList, ps);
-					if(Utils.isTransparent(replace)) bs.reverseList();
-					bs.build();
-					PlayerNotify pn = new PlayerNotify((Player) sender, bs);
-					pn.infoMessage();
-					pn.runMessenger();
+					new ReplaceFinder(ps.getPos1(), ps.getPos2(), replace, replacement, ps); 
 				}else{
 					sender.sendMessage(Utils.prefixe + "Please set both positions!");
 				}
