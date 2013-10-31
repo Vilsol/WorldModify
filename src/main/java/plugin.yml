@@ -16,3 +16,5 @@ commands:
       usage: /<command>
    .replacenear:
       usage: /<command> <distance> <block> <block>
+   .stack:
+      usage: /<command> <amount>

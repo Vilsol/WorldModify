@@ -1,7 +1,9 @@
 package worldmodify;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -100,9 +102,9 @@ public class Utils {
 	 * @return Size of the area
 	 */
 	public static Integer getTotalBlocks(Location low, Location high) {
-		int x = high.getBlockX() - low.getBlockX();
-		int y = high.getBlockY() - low.getBlockY();
-		int z = high.getBlockZ() - low.getBlockZ();
+		int x = high.getBlockX() - low.getBlockX() + 1;
+		int y = high.getBlockY() - low.getBlockY() + 1;
+		int z = high.getBlockZ() - low.getBlockZ() + 1;
 		return x * y * z;
 	}
 
@@ -160,8 +162,8 @@ public class Utils {
 			InventoryHolder ih = (InventoryHolder) bl.getState();
 			ih.getInventory().clear();
 		}
-		if(!bl.getType().equals(Material.GLOWSTONE)){
-			bl.setType(Material.GLOWSTONE);
+		if(!bl.getType().equals(Material.JACK_O_LANTERN)){
+			bl.setType(Material.JACK_O_LANTERN);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(WorldModify.plugin, new Runnable(){
 				@Override
 				public void run() {
@@ -189,6 +191,34 @@ public class Utils {
 	public static boolean noPerms(CommandSender sender) {
 		sender.sendMessage(Utils.prefixe + "You don't have permission to do this command!");
 		return true;
+	}
+	
+	/**
+	 * Converts provided direction to an integer.
+	 * @param dir Direction
+	 * @return Direction of provided value
+	 */
+	public static int dirToInt(float dir){
+		return Math.round(dir / 45f);
+	}
+	
+	/**
+	 * Gives a map of the size between 2 points
+	 * @param pos1 First position
+	 * @param pos2 Second position
+	 * @return Map with xSize ySize and zSize
+	 */
+	public static Map<String, Integer> getSelectionSize(Location pos1, Location pos2){
+		Location lowPoint = Utils.getLowPoint(pos1, pos2);
+		Location highPoint = Utils.getHighestPoint(pos1, pos2);
+		
+		Map<String, Integer> size = new HashMap<String,Integer>();
+
+		size.put("xSize", highPoint.getBlockX() - lowPoint.getBlockX() + 1);
+		size.put("ySize", highPoint.getBlockY() - lowPoint.getBlockY() + 1);
+		size.put("zSize", highPoint.getBlockZ() - lowPoint.getBlockZ() + 1);
+		
+		return size;
 	}
 	
 }

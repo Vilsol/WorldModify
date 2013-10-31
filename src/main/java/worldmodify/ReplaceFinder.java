@@ -17,6 +17,7 @@ public class ReplaceFinder {
 	public int zMod = 0;
 	public int checked = 0;
 	public int announceWaiter = 0;
+	public int bonus = 0;
 	
 	public ReplaceFinder(Location pos1, Location pos2, final VirtualBlock replace, final VirtualBlock replacement, final PlayerSession ps){
 		final Location low = Utils.getLowPoint(pos1, pos2);
@@ -25,13 +26,16 @@ public class ReplaceFinder {
 		xMod = low.getBlockX();
 		yMod = low.getBlockY();
 		zMod = low.getBlockZ();
+		if(totalBlocks <= 1){
+			bonus = 1;
+		}
 		waiter = Bukkit.getScheduler().scheduleSyncRepeatingTask(WorldModify.plugin, new Runnable(){
 			@Override
 			public void run() {
 				int current = 0;
-				firstLoop: for(int Y = yMod; Y < high.getBlockY(); Y++){
-					for(int X = xMod; X < high.getBlockX(); X++){
-						for(int Z = zMod; Z < high.getBlockZ(); Z++){
+				firstLoop: for(int Y = yMod; Y < high.getBlockY() + bonus; Y++){
+					for(int X = xMod; X < high.getBlockX() + bonus; X++){
+						for(int Z = zMod; Z < high.getBlockZ() + bonus; Z++){
 							if(current == Utils.getLocalLimit() * 5){
 								yMod = Y;
 								xMod = X;
@@ -91,13 +95,16 @@ public class ReplaceFinder {
 		xMod = low.getBlockX();
 		yMod = low.getBlockY();
 		zMod = low.getBlockZ();
+		if(totalBlocks <= 1){
+			bonus = 1;
+		}
 		waiter = Bukkit.getScheduler().scheduleSyncRepeatingTask(WorldModify.plugin, new Runnable(){
 			@Override
 			public void run() {
 				int current = 0;
-				firstLoop: for(int Y = yMod; Y < high.getBlockY(); Y++){
-					for(int X = xMod; X < high.getBlockX(); X++){
-						for(int Z = zMod; Z < high.getBlockZ(); Z++){
+				firstLoop: for(int Y = yMod; Y < high.getBlockY() + bonus; Y++){
+					for(int X = xMod; X < high.getBlockX() + bonus; X++){
+						for(int Z = zMod; Z < high.getBlockZ() + bonus; Z++){
 							if(current == Utils.getLocalLimit() * 5){
 								yMod = Y;
 								xMod = X;

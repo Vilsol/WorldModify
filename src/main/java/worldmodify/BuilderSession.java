@@ -15,11 +15,13 @@ public class BuilderSession {
 	private Integer task;
 	private Integer totalBlocks;
 	private Integer builtBlocks = 0;
-	private boolean buildTransparent = false;
 	private boolean paused = false;
 	private PlayerSession playerSession;
 	private List<VirtualBlock> replaced = new ArrayList<VirtualBlock>();
+	private List<VirtualBlock> transparent = new ArrayList<VirtualBlock>();
 	private boolean saveUndo = true;
+	private boolean buildTransparent = false;
+	Iterator<VirtualBlock> i;
 	
 	public BuilderSession(List<VirtualBlock> vb) {
 		totalBlocks = vb.size();
@@ -38,51 +40,51 @@ public class BuilderSession {
 	public void build(){
 		done = false;
 		WorldModify.builderSessions.add(this);
+		i = blockList.iterator();
 		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(WorldModify.plugin, new Runnable(){
 			@Override
 			public void run() {
 				if(!paused){
 					int blockCount = 0;
-					boolean hasNoSolid = true;
-					Iterator<VirtualBlock> i = blockList.iterator();
 					
-					if(blockList != null && blockList.size() > 0){
+					if(i != null && i.hasNext()){
 						while(i.hasNext()){
 							VirtualBlock vb = i.next();
 
 							if(Utils.getLocalLimit() == blockCount){
-								hasNoSolid = false;
 								break;
 							}
-							
-							replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
-							
+
 							if(!Utils.isTransparent(vb)){
-								hasNoSolid = false;
+								replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
 								vb.buildBlock();
 								blockCount++;
 							}else{
 								if(buildTransparent){
+									replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
 									vb.buildBlock();
 									blockCount++;
+								}else{
+									transparent.add(vb);
 								}
 							}
-
+							
 							i.remove();
 						}
 						builtBlocks += blockCount;
 					}else{
-						if(playerSession != null){
-							playerSession.getPlayer().sendMessage(Utils.prefix + "Done!");
-							if(saveUndo) playerSession.addToHistory(replaced);
+						if(buildTransparent){
+							if(playerSession != null){
+								playerSession.getPlayer().sendMessage(Utils.prefix + "Done!");
+								if(saveUndo) playerSession.addToHistory(replaced);
+							}
+							WorldModify.builderSessions.remove(this);
+							Bukkit.getScheduler().cancelTask(task);
+							done = true;
+						}else{
+							buildTransparent = true;
+							i = transparent.iterator();
 						}
-						WorldModify.builderSessions.remove(this);
-						Bukkit.getScheduler().cancelTask(task);
-						done = true;
-					}
-					
-					if(hasNoSolid){
-						buildTransparent = true;
 					}
 					
 				}else{

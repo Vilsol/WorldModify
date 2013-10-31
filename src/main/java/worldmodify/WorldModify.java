@@ -19,6 +19,7 @@ import worldmodify.Commands.CommandPos2;
 import worldmodify.Commands.CommandReplace;
 import worldmodify.Commands.CommandReplacenear;
 import worldmodify.Commands.CommandSet;
+import worldmodify.Commands.CommandStack;
 import worldmodify.Commands.CommandUndo;
 
 public class WorldModify extends JavaPlugin {
@@ -48,6 +49,7 @@ public class WorldModify extends JavaPlugin {
 		getCommand(".set").setExecutor(new CommandSet());
 		getCommand(".undo").setExecutor(new CommandUndo());
 		getCommand(".replacenear").setExecutor(new CommandReplacenear());
+		getCommand(".stack").setExecutor(new CommandStack());
 	}
 
 	private void loadMetrics() {
