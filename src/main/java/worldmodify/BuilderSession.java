@@ -55,25 +55,29 @@ public class BuilderSession {
 								break;
 							}
 
-							if(!Utils.isTransparent(vb)){
-								replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
-								vb.buildBlock();
-								blockCount++;
-							}else{
-								if(buildTransparent){
+							if(!Utils.isSameVirtualBlock(vb, new VirtualBlock(vb.getLocation().getBlock()))){
+								if(!Utils.isTransparent(vb)){
 									replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
 									vb.buildBlock();
 									blockCount++;
 								}else{
-									transparent.add(vb);
+									if(buildTransparent){
+										replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
+										vb.buildBlock();
+										blockCount++;
+									}else{
+										transparent.add(vb);
+									}
 								}
+							}else{
+								blockCount++;
 							}
 							
 							i.remove();
 						}
 						builtBlocks += blockCount;
 					}else{
-						if(buildTransparent){
+						if(builtBlocks >= totalBlocks){
 							if(playerSession != null){
 								playerSession.getPlayer().sendMessage(Utils.prefix + "Done!");
 								if(saveUndo) playerSession.addToHistory(replaced);
@@ -82,8 +86,16 @@ public class BuilderSession {
 							Bukkit.getScheduler().cancelTask(task);
 							done = true;
 						}else{
-							buildTransparent = true;
-							i = transparent.iterator();
+							if(buildTransparent){
+								if(blockList.size() > 0){
+									i = blockList.iterator();
+								}else{
+									i = transparent.iterator();
+								}
+							}else{
+								i = transparent.iterator();
+								buildTransparent = true;
+							}
 						}
 					}
 					

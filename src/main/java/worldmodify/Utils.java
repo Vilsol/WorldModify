@@ -114,7 +114,8 @@ public class Utils {
 	 */
 	public static int getLocalLimit() {
 		if(WorldModify.builderSessions == null || WorldModify.builderSessions.size() == 0) return WorldModify.limit;
-		return (int) Math.floor(WorldModify.limit / WorldModify.builderSessions.size());
+		int limit = (int) Math.ceil(WorldModify.limit / WorldModify.builderSessions.size());
+		return (limit > 0) ? limit : 1;
 	}
 
 	/**
@@ -219,6 +220,13 @@ public class Utils {
 		size.put("zSize", highPoint.getBlockZ() - lowPoint.getBlockZ() + 1);
 		
 		return size;
+	}
+
+	public static boolean arrContains(String[] haystack, String needle) {
+		for(String s : haystack){
+			if(s.equalsIgnoreCase(needle)) return true;
+		}
+		return false;
 	}
 	
 }

@@ -3,6 +3,8 @@ package worldmodify;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.server.v1_6_R3.Material;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,7 +24,7 @@ public class StackFinder {
 	public int bonusY = 0;
 	public int bonusZ = 0;
 	
-	public StackFinder(final PlayerSession ps, final int alterx, final int altery, final int alterz, final int times) {
+	public StackFinder(final PlayerSession ps, final int alterx, final int altery, final int alterz, final int times, final boolean excludeAir) {
 		final Location low = Utils.getLowPoint(ps.getPos1(), ps.getPos2());
 		final Location high = Utils.getHighestPoint(ps.getPos1(), ps.getPos2());
 		final int totalBlocks = Utils.getTotalBlocks(low, high);
@@ -38,11 +40,12 @@ public class StackFinder {
 		waiter = Bukkit.getScheduler().scheduleSyncRepeatingTask(WorldModify.plugin, new Runnable(){
 			@Override
 			public void run() {
+				int localLimit = (Utils.getLocalLimit() * 5 >= 1000) ? Utils.getLocalLimit() * 5 : 1000;
 				int current = 0;
 				firstLoop: for(int Y = yMod; Y < high.getBlockY() + bonusY; Y++){
 					for(int X = xMod; X < high.getBlockX() + bonusX; X++){
 						for(int Z = zMod; Z < high.getBlockZ() + bonusZ; Z++){
-							if(current == Utils.getLocalLimit() * 5 + 100){
+							if(current == localLimit){
 								yMod = Y;
 								xMod = X;
 								zMod = Z;
@@ -50,6 +53,7 @@ public class StackFinder {
 							}
 
 							VirtualBlock stacking = new VirtualBlock(low.getWorld().getBlockAt(X, Y, Z));
+							if(excludeAir && stacking.getMaterial().equals(Material.AIR)) continue;
 							for(int i = 1; i <= times; i++){
 								VirtualBlock virt = new VirtualBlock(stacking);
 								virt.setLocation(new Location(low.getWorld(), X + (alterx * i), Y + (altery * i), Z + (alterz * i)));

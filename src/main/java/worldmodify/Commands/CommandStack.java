@@ -43,7 +43,10 @@ public class CommandStack implements CommandExecutor {
 				if(pi == 1 || pi == 2) altery = size.get("ySize") * -1;
 
 				sender.sendMessage(Utils.prefix + "Scanning area...");
-				new StackFinder(ps, alterx, altery, alterz, times);
+				
+				boolean excludeAir = Utils.arrContains(args, "-a");
+				
+				new StackFinder(ps, alterx, altery, alterz, times, excludeAir);
 			}
 		}else{
 			Utils.requirePlayer(sender, "stack");
