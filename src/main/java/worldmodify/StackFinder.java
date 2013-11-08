@@ -52,7 +52,7 @@ public class StackFinder {
 							}
 
 							VirtualBlock stacking = new VirtualBlock(low.getWorld().getBlockAt(X, Y, Z));
-							if(excludeAir && stacking.getMaterial().equals(Material.AIR)) continue;
+							if(excludeAir && stacking.getMaterial() == Material.AIR) continue;
 							for(int i = 1; i <= times; i++){
 								VirtualBlock virt = new VirtualBlock(stacking);
 								virt.setLocation(new Location(low.getWorld(), X + (alterx * i), Y + (altery * i), Z + (alterz * i)));

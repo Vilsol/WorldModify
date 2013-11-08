@@ -45,7 +45,7 @@ public class CommandStack implements CommandExecutor {
 				sender.sendMessage(Utils.prefix + "Scanning area...");
 				
 				boolean excludeAir = Utils.arrContains(args, "-a");
-				
+
 				new StackFinder(ps, alterx, altery, alterz, times, excludeAir);
 			}
 		}else{

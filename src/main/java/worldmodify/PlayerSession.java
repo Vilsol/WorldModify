@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 public class PlayerSession {
 
@@ -12,6 +13,8 @@ public class PlayerSession {
 	private Location pos1;
 	private Location pos2;
 	private List<List<VirtualBlock>> history = new ArrayList<List<VirtualBlock>>();
+	private List<VirtualBlock> clipboard;
+	private Vector relativeCopy;
 	
 	public PlayerSession(Player player) {
 		plr = player;
@@ -100,6 +103,38 @@ public class PlayerSession {
 			return bs;
 		}
 		return null;
+	}
+	
+	/**
+	 * Returns the relative position from lowest point of the clipboard
+	 * @return Vector with relative coordinates
+	 */
+	public Vector getRelativeCopy(){
+		return relativeCopy;
+	}
+	
+	/**
+	 * Returns the players clipboard
+	 * @return List of blocks in clipboard
+	 */
+	public List<VirtualBlock> getClipboard(){
+		return clipboard;
+	}
+	
+	/**
+	 * Sets the clipboard
+	 * @param blockList
+	 */
+	public void setClipboard(List<VirtualBlock> blockList){
+		clipboard = blockList;
+	}
+	
+	/**
+	 * Sets the relative position of clipboard
+	 * @param rel
+	 */
+	public void setRelativeCopy(Vector rel){
+		relativeCopy = rel;
 	}
 	
 }
