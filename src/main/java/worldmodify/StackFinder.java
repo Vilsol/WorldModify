@@ -3,11 +3,10 @@ package worldmodify;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_6_R3.Material;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 
 public class StackFinder {
