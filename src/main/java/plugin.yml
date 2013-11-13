@@ -1,6 +1,6 @@
 name: WorldModify
 main: worldmodify.WorldModify
-version: 1.0
+version: 1.1
 commands:
    .limit:
       usage: /<command> <amount>
@@ -18,3 +18,7 @@ commands:
       usage: /<command> <distance> <block> <block>
    .stack:
       usage: /<command> <amount>
+   .copy:
+      usage: /<command>
+   .paste:
+      usage: /<command>

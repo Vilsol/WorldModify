@@ -15,6 +15,7 @@ public class PlayerSession {
 	private List<List<VirtualBlock>> history = new ArrayList<List<VirtualBlock>>();
 	private List<VirtualBlock> clipboard;
 	private Vector relativeCopy;
+	private Location copyLocation;
 	
 	public PlayerSession(Player player) {
 		plr = player;
@@ -123,7 +124,7 @@ public class PlayerSession {
 	
 	/**
 	 * Sets the clipboard
-	 * @param blockList
+	 * @param blockList List containing clipboard
 	 */
 	public void setClipboard(List<VirtualBlock> blockList){
 		clipboard = blockList;
@@ -131,10 +132,26 @@ public class PlayerSession {
 	
 	/**
 	 * Sets the relative position of clipboard
-	 * @param rel
+	 * @param rel Relative position
 	 */
 	public void setRelativeCopy(Vector rel){
 		relativeCopy = rel;
+	}
+	
+	/**
+	 * Sets the location of last copy
+	 * @param loc Copy location
+	 */
+	public void setCopyLocation(Location loc){
+		copyLocation = loc;
+	}
+	
+	/**
+	 * Returns the location of last copy
+	 * @return Last copy location
+	 */
+	public Location getCopyLocation(){
+		return copyLocation;
 	}
 	
 }

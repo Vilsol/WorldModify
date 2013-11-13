@@ -13,7 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import worldmodify.Metrics.Graph;
+import worldmodify.Commands.CommandCopy;
 import worldmodify.Commands.CommandLimit;
+import worldmodify.Commands.CommandPaste;
 import worldmodify.Commands.CommandPos1;
 import worldmodify.Commands.CommandPos2;
 import worldmodify.Commands.CommandReplace;
@@ -50,6 +52,8 @@ public class WorldModify extends JavaPlugin {
 		getCommand(".undo").setExecutor(new CommandUndo());
 		getCommand(".replacenear").setExecutor(new CommandReplacenear());
 		getCommand(".stack").setExecutor(new CommandStack());
+		getCommand(".copy").setExecutor(new CommandCopy());
+		getCommand(".paste").setExecutor(new CommandPaste());
 	}
 
 	private void loadMetrics() {

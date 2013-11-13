@@ -89,6 +89,7 @@ public class BuilderSession {
 							if(buildTransparent){
 								if(blockList.size() > 0){
 									i = blockList.iterator();
+									buildTransparent = false;
 								}else{
 									i = transparent.iterator();
 								}

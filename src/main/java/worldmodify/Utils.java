@@ -1,5 +1,6 @@
 package worldmodify;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.util.Vector;
 
 public class Utils {
 
@@ -222,11 +224,43 @@ public class Utils {
 		return size;
 	}
 
+	/**
+	 * Checks if a string array contains a string
+	 * @param haystack String array
+	 * @param needle Needle
+	 * @return True if contains
+	 */
 	public static boolean arrContains(String[] haystack, String needle) {
 		for(String s : haystack){
 			if(s.equalsIgnoreCase(needle)) return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Returns the relative vector to the coordinates
+	 * @param pos1 First location
+	 * @param pos2 Second location
+	 * @return Vector with relative coordinates
+	 */
+	public static Vector getRelativeCoords(Location pos1, Location pos2){
+		return new Vector(pos1.getBlockX() - pos2.getBlockX(), pos1.getBlockY() - pos2.getBlockY(), pos1.getBlockZ() - pos2.getBlockZ());
+	}
+	
+	/**
+	 * Change all the block positions inside the list
+	 * @param blockList List of blocks
+	 * @param difference Vector with difference
+	 * @return Altered list of blocks
+	 */
+	public static List<VirtualBlock> alterBlockPosition(List<VirtualBlock> blockList, Vector difference){
+		List<VirtualBlock> newList = new ArrayList<VirtualBlock>();
+		for(VirtualBlock vb : blockList){
+			VirtualBlock vbs = new VirtualBlock(vb);
+			vbs.setLocation(new Location(vb.getLocation().getWorld(), vb.getLocation().getBlockX(), vb.getLocation().getBlockY(), vb.getLocation().getBlockZ()).add(difference));
+			newList.add(vbs);
+		}
+		return newList;
 	}
 	
 }
