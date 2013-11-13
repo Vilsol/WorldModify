@@ -2,7 +2,11 @@ package worldmodify;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -116,6 +120,7 @@ public class Utils {
 	 */
 	public static int getLocalLimit() {
 		if(WorldModify.builderSessions == null || WorldModify.builderSessions.size() == 0) return WorldModify.limit;
+		if(WorldModify.limit == 0) return 0;
 		int limit = (int) Math.ceil(WorldModify.limit / WorldModify.builderSessions.size());
 		return (limit > 0) ? limit : 1;
 	}
@@ -262,5 +267,26 @@ public class Utils {
 		}
 		return newList;
 	}
+	
+	/**
+	 * This sorts a map containing a material and integer by the integer
+	 * @param map Map with materials and integers
+	 * @return Sorted map
+	 */
+	public static Map<Material, Integer> sortByValue(Map<Material, Integer> map) {
+        List<Map.Entry<Material, Integer>> list = new LinkedList<Map.Entry<Material, Integer>>(map.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<Material, Integer>>() {
+            public int compare(Map.Entry<Material, Integer> m1, Map.Entry<Material, Integer> m2) {
+                return (m2.getValue()).compareTo(m1.getValue());
+            }
+        });
+
+        Map<Material, Integer> result = new LinkedHashMap<Material, Integer>();
+        for (Map.Entry<Material, Integer> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
 	
 }

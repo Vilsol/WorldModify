@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import worldmodify.Metrics.Graph;
 import worldmodify.Commands.CommandCopy;
+import worldmodify.Commands.CommandDistr;
 import worldmodify.Commands.CommandLimit;
 import worldmodify.Commands.CommandPaste;
 import worldmodify.Commands.CommandPos1;
@@ -54,6 +55,7 @@ public class WorldModify extends JavaPlugin {
 		getCommand(".stack").setExecutor(new CommandStack());
 		getCommand(".copy").setExecutor(new CommandCopy());
 		getCommand(".paste").setExecutor(new CommandPaste());
+		getCommand(".distr").setExecutor(new CommandDistr());
 	}
 
 	private void loadMetrics() {

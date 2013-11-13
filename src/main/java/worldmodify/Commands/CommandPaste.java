@@ -19,7 +19,7 @@ public class CommandPaste implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
-		if(!sender.hasPermission("wm.copy")) return Utils.noPerms(sender);
+		if(!sender.hasPermission("wm.paste")) return Utils.noPerms(sender);
 		if(sender instanceof Player){
 			Player plr = (Player) sender;
 			PlayerSession ps = WMBukkit.getPlayerSession(plr);
@@ -37,7 +37,7 @@ public class CommandPaste implements CommandExecutor {
 				}
 			}
 		}else{
-			Utils.requirePlayer(sender, "stack");
+			Utils.requirePlayer(sender, "paste");
 		}
 		return true;
 	}

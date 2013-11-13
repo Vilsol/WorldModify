@@ -22,3 +22,5 @@ commands:
       usage: /<command>
    .paste:
       usage: /<command>
+   .distr:
+      usage: /<command>

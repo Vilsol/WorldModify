@@ -27,7 +27,7 @@ public class CommandCopy implements CommandExecutor {
 				new CopyScanner(ps, excludeAir);
 			}
 		}else{
-			Utils.requirePlayer(sender, "stack");
+			Utils.requirePlayer(sender, "copy");
 		}
 		return true;
 	}
