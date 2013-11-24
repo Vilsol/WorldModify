@@ -10,9 +10,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import worldmodify.PlayerSession;
-import worldmodify.Utils;
 import worldmodify.WorldModify;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Utils;
 
 public class DistrScanner {
 	

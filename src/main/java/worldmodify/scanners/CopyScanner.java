@@ -1,4 +1,4 @@
-package worldmodify;
+package worldmodify.scanners;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+
+import worldmodify.WorldModify;
+import worldmodify.sessions.CommanderSession;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Utils;
+import worldmodify.utils.VirtualBlock;
 
 
 public class CopyScanner {
@@ -23,9 +29,9 @@ public class CopyScanner {
 	public int bonusY = 0;
 	public int bonusZ = 0;
 	
-	public CopyScanner(final PlayerSession ps, final boolean excludeAir) {
-		final Location low = Utils.getLowPoint(ps.getPos1(), ps.getPos2());
-		final Location high = Utils.getHighestPoint(ps.getPos1(), ps.getPos2());
+	public CopyScanner(final CommanderSession cs, final boolean excludeAir) {
+		final Location low = Utils.getLowPoint(cs.getPos1(), cs.getPos2());
+		final Location high = Utils.getHighestPoint(cs.getPos1(), cs.getPos2());
 		final int totalBlocks = Utils.getTotalBlocks(low, high);
 		xMod = low.getBlockX();
 		yMod = low.getBlockY();
@@ -59,7 +65,7 @@ public class CopyScanner {
 					}
 				}
 				
-				if(announceWaiter == 20){
+				if(announceWaiter == 20 && cs instanceof PlayerSession){
 					String message = Utils.prefix + "Scanning: [";
 					double filled = Math.floor((( (double) checked / totalBlocks) * 100) / 5);
 					for(int x = 0; x < 20; x++){
@@ -73,7 +79,7 @@ public class CopyScanner {
 					}
 					message += ChatColor.AQUA + "] " + checked + "/" + totalBlocks;
 					
-					ps.getPlayer().sendMessage(message);
+					((PlayerSession) cs).getPlayer().sendMessage(message);
 					announceWaiter = 0;
 				}else{
 					announceWaiter++;
@@ -82,8 +88,8 @@ public class CopyScanner {
 				checked += current;
 				
 				if(checked >= totalBlocks){
-					ps.getPlayer().sendMessage(Utils.prefix + "Blocks copied!");
-					ps.setClipboard(blockList);
+					if(cs instanceof PlayerSession) ((PlayerSession) cs).getPlayer().sendMessage(Utils.prefix + "Blocks copied!");
+					cs.setClipboard(blockList);
 					Bukkit.getScheduler().cancelTask(waiter);
 				}
 			}

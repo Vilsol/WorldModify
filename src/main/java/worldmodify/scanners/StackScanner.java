@@ -1,4 +1,4 @@
-package worldmodify;
+package worldmodify.scanners;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
+import worldmodify.WMBukkit;
+import worldmodify.WorldModify;
+import worldmodify.notifiers.PlayerNotify;
+import worldmodify.sessions.BuilderSession;
+import worldmodify.sessions.CommanderSession;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Utils;
+import worldmodify.utils.VirtualBlock;
 
-public class StackFinder {
+
+public class StackScanner {
 
 	public List<VirtualBlock> blockList = new ArrayList<VirtualBlock>();
 	public boolean done = false;
@@ -23,9 +32,9 @@ public class StackFinder {
 	public int bonusY = 0;
 	public int bonusZ = 0;
 	
-	public StackFinder(final PlayerSession ps, final int alterx, final int altery, final int alterz, final int times, final boolean excludeAir) {
-		final Location low = Utils.getLowPoint(ps.getPos1(), ps.getPos2());
-		final Location high = Utils.getHighestPoint(ps.getPos1(), ps.getPos2());
+	public StackScanner(final CommanderSession cs, final int alterx, final int altery, final int alterz, final int times, final boolean excludeAir) {
+		final Location low = Utils.getLowPoint(cs.getPos1(), cs.getPos2());
+		final Location high = Utils.getHighestPoint(cs.getPos1(), cs.getPos2());
 		final int totalBlocks = Utils.getTotalBlocks(low, high);
 		xMod = low.getBlockX();
 		yMod = low.getBlockY();
@@ -63,7 +72,7 @@ public class StackFinder {
 					}
 				}
 				
-				if(announceWaiter == 20){
+				if(announceWaiter == 20 && cs instanceof PlayerSession){
 					String message = Utils.prefix + "Scanning: [";
 					double filled = Math.floor((( (double) checked / totalBlocks) * 100) / 5);
 					for(int x = 0; x < 20; x++){
@@ -77,7 +86,7 @@ public class StackFinder {
 					}
 					message += ChatColor.AQUA + "] " + checked + "/" + totalBlocks;
 					
-					ps.getPlayer().sendMessage(message);
+					((PlayerSession) cs).getPlayer().sendMessage(message);
 					announceWaiter = 0;
 				}else{
 					announceWaiter++;
@@ -86,11 +95,13 @@ public class StackFinder {
 				checked += current;
 				
 				if(checked >= totalBlocks){
-					BuilderSession bs = WMBukkit.makeBuilderSession(blockList, ps);
+					BuilderSession bs = WMBukkit.makeBuilderSession(blockList, cs);
 					bs.build();
-					PlayerNotify pn = new PlayerNotify(ps.getPlayer(), bs);
-					pn.infoMessage();
-					pn.runMessenger();
+					if(cs instanceof PlayerSession){
+						PlayerNotify pn = new PlayerNotify(((PlayerSession) cs).getPlayer(), bs);
+						pn.infoMessage();
+						pn.runMessenger();
+					}
 					Bukkit.getScheduler().cancelTask(waiter);
 				}
 			}

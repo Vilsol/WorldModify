@@ -7,11 +7,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import worldmodify.PlayerSession;
-import worldmodify.ReplaceFinder;
-import worldmodify.Utils;
-import worldmodify.VirtualBlock;
 import worldmodify.WMBukkit;
+import worldmodify.scanners.ReplaceScanner;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Utils;
+import worldmodify.utils.VirtualBlock;
 
 public class CommandReplacenear implements CommandExecutor {
 
@@ -28,7 +28,7 @@ public class CommandReplacenear implements CommandExecutor {
 					VirtualBlock replace = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
 					VirtualBlock replacement = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[2])));
 					sender.sendMessage(Utils.prefix + "Detecting replacements...");
-					new ReplaceFinder(plr.getLocation().add(new Vector(distance, distance, distance)), plr.getLocation().add(new Vector(distance*-1, distance*-1, distance*-1)), replace, replacement, ps); 
+					new ReplaceScanner(plr.getLocation().add(new Vector(distance, distance, distance)), plr.getLocation().add(new Vector(distance*-1, distance*-1, distance*-1)), replace, replacement, ps); 
 				}
 			}
 		}else{

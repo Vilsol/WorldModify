@@ -1,34 +1,22 @@
-package worldmodify;
+package worldmodify.sessions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class PlayerSession {
+import worldmodify.WMBukkit;
+import worldmodify.utils.VirtualBlock;
 
-	private Player plr;
+public abstract class CommanderSession {
+
 	private Location pos1;
 	private Location pos2;
 	private List<List<VirtualBlock>> history = new ArrayList<List<VirtualBlock>>();
 	private List<VirtualBlock> clipboard;
 	private Vector relativeCopy;
 	private Location copyLocation;
-	
-	public PlayerSession(Player player) {
-		plr = player;
-		WorldModify.playerSessions.put(plr, this);
-	}
-
-	/**
-	 * Returns the session owner
-	 * @return Session owner
-	 */
-	public Player getPlayer() {
-		return plr;
-	}
 	
 	/**
 	 * Returns the first selection point

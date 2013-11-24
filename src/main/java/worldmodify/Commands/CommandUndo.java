@@ -5,10 +5,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import worldmodify.BuilderSession;
-import worldmodify.PlayerNotify;
-import worldmodify.Utils;
 import worldmodify.WMBukkit;
+import worldmodify.notifiers.PlayerNotify;
+import worldmodify.sessions.BuilderSession;
+import worldmodify.utils.Utils;
 
 public class CommandUndo implements CommandExecutor {
 

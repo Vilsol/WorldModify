@@ -5,29 +5,26 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+import worldmodify.scanners.ReplaceScanner;
+import worldmodify.sessions.BuilderSession;
+import worldmodify.sessions.CommanderSession;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.sessions.PluginSession;
+import worldmodify.utils.Utils;
+import worldmodify.utils.VirtualBlock;
 
 public class WMBukkit {
-
-	/**
-	 * Creates a new placer session.
-	 * @param vb List of all virtual blocks to be placed;
-	 * @param pos1 First position
-	 * @param pos2 Second position
-	 * @return The placer session
-	 */
-	public static BuilderSession makeBuilderSession(List<VirtualBlock> vb){
-		BuilderSession bs = new BuilderSession(vb);
-		return bs;
-	}
 	
 	/**
 	 * Creates a new placer session.
 	 * @param vb List of all virtual blocks to be placed;
-	 * @param ps Player session
+	 * @param commanderSession Commander session
 	 * @return The placer session
 	 */
-	public static BuilderSession makeBuilderSession(List<VirtualBlock> vb, PlayerSession ps){
-		BuilderSession bs = new BuilderSession(vb, ps);
+	public static BuilderSession makeBuilderSession(List<VirtualBlock> vb, CommanderSession cs){
+		BuilderSession bs = new BuilderSession(vb, cs);
 		return bs;
 	}
 	
@@ -61,20 +58,8 @@ public class WMBukkit {
 	 * @param vb The virtual block to be filled with
 	 * @return List of virtual blocks
 	 */
-	public static List<VirtualBlock> getVirtualCuboid(PlayerSession ps, VirtualBlock vb){
-		return WMBukkit.getVirtualCuboid(ps.getPos1(), ps.getPos2(), vb);
-	}
-	
-	/**
-	 * Creates a new list of blocks that replace existing
-	 * @param pos1 First Position
-	 * @param pos2 Second Position
-	 * @param replace Block to replace
-	 * @param replacement Replacement Block
-	 * @return List of virtual blocks
-	 */
-	public static ReplaceFinder getVirtualReplaceCuboid(Location pos1, Location pos2, VirtualBlock replace, VirtualBlock replacement){
-		return new ReplaceFinder(pos1, pos2, replace, replacement);
+	public static List<VirtualBlock> getVirtualCuboid(CommanderSession cs, VirtualBlock vb){
+		return WMBukkit.getVirtualCuboid(cs.getPos1(), cs.getPos2(), vb);
 	}
 	
 	/**
@@ -84,8 +69,8 @@ public class WMBukkit {
 	 * @param replacement Replacement Block
 	 * @return List of virtual blocks
 	 */
-	public static ReplaceFinder getVirtualReplaceCuboid(PlayerSession ps, VirtualBlock replace, VirtualBlock replacement){
-		return new ReplaceFinder(ps.getPos1(), ps.getPos2(), replace, replacement, ps);
+	public static ReplaceScanner getVirtualReplaceCuboid(CommanderSession cs, VirtualBlock replace, VirtualBlock replacement){
+		return new ReplaceScanner(cs.getPos1(), cs.getPos2(), replace, replacement, cs);
 	}
 
 	/**
@@ -106,5 +91,25 @@ public class WMBukkit {
 	 */
 	public static PlayerSession getPlayerSession(Player player){
 		return createPlayerSession(player);
+	}
+
+	/**
+	 * Creates a new session for the plugin
+	 * @param player New plguin
+	 * @return The plugin session
+	 */
+	public static PluginSession createPluginSession(Plugin plugin) {
+		if(Utils.pluginHasSession(plugin)) return WorldModify.pluginSessions.get(plugin);
+		PluginSession ps = new PluginSession(plugin);
+		return ps;
+	}
+	
+	/**
+	 * Returns the plugin session
+	 * @param player Plugin
+	 * @return Plugin Session
+	 */
+	public static PluginSession getPluginSession(Plugin plugin){
+		return createPluginSession(plugin);
 	}
 }

@@ -1,4 +1,4 @@
-package worldmodify;
+package worldmodify.utils;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

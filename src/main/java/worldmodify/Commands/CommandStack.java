@@ -7,10 +7,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import worldmodify.PlayerSession;
-import worldmodify.StackFinder;
-import worldmodify.Utils;
 import worldmodify.WMBukkit;
+import worldmodify.scanners.StackScanner;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Utils;
 
 public class CommandStack implements CommandExecutor {
 
@@ -46,7 +46,7 @@ public class CommandStack implements CommandExecutor {
 				
 				boolean excludeAir = Utils.arrContains(args, "-a");
 
-				new StackFinder(ps, alterx, altery, alterz, times, excludeAir);
+				new StackScanner(ps, alterx, altery, alterz, times, excludeAir);
 			}
 		}else{
 			Utils.requirePlayer(sender, "stack");

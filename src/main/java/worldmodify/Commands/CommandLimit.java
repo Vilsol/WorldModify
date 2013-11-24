@@ -5,8 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import worldmodify.Utils;
 import worldmodify.WorldModify;
+import worldmodify.utils.Utils;
 
 public class CommandLimit implements CommandExecutor {
 

@@ -6,10 +6,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import worldmodify.CopyScanner;
-import worldmodify.PlayerSession;
-import worldmodify.Utils;
 import worldmodify.WMBukkit;
+import worldmodify.scanners.CopyScanner;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Utils;
 
 public class CommandCopy implements CommandExecutor {
 

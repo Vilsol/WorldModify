@@ -6,11 +6,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import worldmodify.PlayerSession;
-import worldmodify.ReplaceFinder;
-import worldmodify.Utils;
-import worldmodify.VirtualBlock;
 import worldmodify.WMBukkit;
+import worldmodify.scanners.ReplaceScanner;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Utils;
+import worldmodify.utils.VirtualBlock;
 
 public class CommandReplace implements CommandExecutor {
 
@@ -25,7 +25,7 @@ public class CommandReplace implements CommandExecutor {
 					VirtualBlock replace = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[0])));
 					VirtualBlock replacement = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[1])));
 					sender.sendMessage(Utils.prefix + "Detecting replacements...");
-					new ReplaceFinder(ps.getPos1(), ps.getPos2(), replace, replacement, ps); 
+					new ReplaceScanner(ps.getPos1(), ps.getPos2(), replace, replacement, ps); 
 				}else{
 					sender.sendMessage(Utils.prefixe + "Please set both positions!");
 				}

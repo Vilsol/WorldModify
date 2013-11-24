@@ -1,4 +1,4 @@
-package worldmodify;
+package worldmodify.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,7 +10,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class WorldModifyListener implements Listener {
+import worldmodify.WMBukkit;
+import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Utils;
+
+public class PlayerListener implements Listener {
 
 	@EventHandler
 	public static void onPlayerJoin(PlayerJoinEvent evt){

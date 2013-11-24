@@ -1,4 +1,4 @@
-package worldmodify;
+package worldmodify.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,10 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
+
+import worldmodify.WorldModify;
 
 public class Utils {
 
@@ -289,4 +292,12 @@ public class Utils {
         return result;
     }
 	
+	/**
+	 * Checks if the plugin has a WorldModify session
+	 * @param player Checked plugin
+	 * @return If plguin has a session
+	 */
+	public static boolean pluginHasSession(Plugin plugin) {
+		return (WorldModify.pluginSessions.containsKey(plugin));
+	}
 }
