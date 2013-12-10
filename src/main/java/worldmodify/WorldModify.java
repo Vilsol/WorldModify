@@ -1,18 +1,17 @@
 package worldmodify;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import worldmodify.Metrics.Graph;
 import worldmodify.Commands.CommandCopy;
 import worldmodify.Commands.CommandDistr;
 import worldmodify.Commands.CommandLimit;
@@ -24,7 +23,6 @@ import worldmodify.Commands.CommandReplacenear;
 import worldmodify.Commands.CommandSet;
 import worldmodify.Commands.CommandStack;
 import worldmodify.Commands.CommandUndo;
-import worldmodify.Metrics.Graph;
 import worldmodify.listeners.PlayerListener;
 import worldmodify.sessions.BuilderSession;
 import worldmodify.sessions.PlayerSession;
@@ -87,11 +85,7 @@ public class WorldModify extends JavaPlugin {
 	}
 
 	private void loadConfig() {
-		InputStream defConfigStream = getResource("config.yml");
-    	YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-		getConfig().setDefaults(defConfig);
-		getConfig().options().copyDefaults(true);
-		saveConfig();
+		saveDefaultConfig();
 		
 		limit = getConfig().getInt("Config.GlobalLimit");
 	}
