@@ -86,7 +86,6 @@ public class WorldModify extends JavaPlugin {
 
 	private void loadConfig() {
 		saveDefaultConfig();
-		
 		limit = getConfig().getInt("Config.GlobalLimit");
 	}
 	

@@ -139,4 +139,13 @@ public class VirtualBlock {
 		}
 	}
 	
+	/**
+	 * Returns the block at the current location
+	 * 
+	 * @return The block
+	 */
+	public Block getBlock(){
+		return loc.getBlock();
+	}
+	
 }
