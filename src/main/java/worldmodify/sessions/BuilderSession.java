@@ -35,8 +35,8 @@ public class BuilderSession extends BukkitRunnable {
 	@Override
 	public void run() {
 		if(!paused){
+			i = blockList.iterator();
 			int blockCount = 0;
-			
 			if(i != null && i.hasNext()){
 				while(i.hasNext()){
 					if(Utils.getLocalLimit() == blockCount) break;
@@ -101,7 +101,6 @@ public class BuilderSession extends BukkitRunnable {
 	public void build(){
 		done = false;
 		WorldModify.builderSessions.add(this);
-		i = blockList.iterator();
 		this.runTaskTimer(WorldModify.plugin, 0L, 1L);
 	}
 	
