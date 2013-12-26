@@ -39,11 +39,8 @@ public class BuilderSession extends BukkitRunnable {
 			
 			if(i != null && i.hasNext()){
 				while(i.hasNext()){
+					if(Utils.getLocalLimit() == blockCount) break;
 					VirtualBlock vb = i.next();
-
-					if(Utils.getLocalLimit() == blockCount){
-						break;
-					}
 
 					if(!Utils.isSameVirtualBlock(vb, new VirtualBlock(vb.getLocation().getBlock()))){
 						if(!Utils.isTransparent(vb)){
