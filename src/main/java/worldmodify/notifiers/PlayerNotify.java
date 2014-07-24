@@ -56,7 +56,7 @@ public class PlayerNotify {
 					Bukkit.getScheduler().cancelTask(messager);
 				}
 			}
-		}, 0L, 20L);
+		}, 0L, 40L);
 	}
 
 	public void infoMessage() {

@@ -1,6 +1,5 @@
 package worldmodify.sessions;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -11,7 +10,7 @@ import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualBlock;
 
 public class BuilderSession extends BukkitRunnable {
-
+	
 	private Queue<VirtualBlock> blockList;
 	private boolean done = false;
 	private Integer totalBlocks;
@@ -22,81 +21,77 @@ public class BuilderSession extends BukkitRunnable {
 	private Queue<VirtualBlock> transparent = new LinkedList<VirtualBlock>();
 	private boolean saveUndo = true;
 	private boolean buildTransparent = false;
-	Iterator<VirtualBlock> i;
-
+	
 	public BuilderSession(Queue<VirtualBlock> vb, CommanderSession cs) {
 		totalBlocks = vb.size();
 		blockList = vb;
 		commanderSession = cs;
 	}
-
+	
 	@Override
 	public void run() {
-		if(!paused){
-			i = blockList.iterator();
-			int blockCount = 0;
-			if(i != null && i.hasNext()){
-				while(i.hasNext()){
-					if(Utils.getLocalLimit() == blockCount) break;
-					VirtualBlock vb = i.next();
-
-					if(!Utils.isSameVirtualBlock(vb, new VirtualBlock(vb.getLocation().getBlock()))){
-						if(!Utils.isTransparent(vb)){
+		if(paused) {
+			WorldModify.builderSessions.remove(this);
+			this.cancel();
+			return;
+		}
+		
+		Queue<VirtualBlock> q = (buildTransparent) ? transparent : blockList;
+		int blockCount = 0;
+		if(q != null && q.size() > 0) {
+			while(q.size() > 0) {
+				if(Utils.getLocalLimit() == blockCount) break;
+				VirtualBlock vb = q.peek();
+				
+				if(!Utils.isSameVirtualBlock(vb, new VirtualBlock(vb.getLocation().getBlock()))) {
+					if(!Utils.isTransparent(vb)) {
+						replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
+						vb.buildBlock();
+						blockCount++;
+					} else {
+						if(buildTransparent) {
 							replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
 							vb.buildBlock();
 							blockCount++;
-						}else{
-							if(buildTransparent){
-								replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
-								vb.buildBlock();
-								blockCount++;
-							}else{
-								transparent.add(vb);
-							}
+						} else {
+							transparent.add(vb);
 						}
-					}else{
-						blockCount++;
 					}
-					
-					i.remove();
+				} else {
+					blockCount++;
 				}
-				builtBlocks += blockCount;
-			}else{
-				if(builtBlocks >= totalBlocks){
-					if(commanderSession != null){
-						if(commanderSession instanceof PlayerSession){
-							((PlayerSession) commanderSession).getPlayer().sendMessage(Utils.prefix + "Done!");
-						}
-						if(saveUndo) commanderSession.addToHistory(replaced);
+				
+				q.remove();
+			}
+			builtBlocks += blockCount;
+		} else {
+			if(builtBlocks >= totalBlocks) {
+				if(commanderSession != null) {
+					if(commanderSession instanceof PlayerSession) {
+						((PlayerSession) commanderSession).getPlayer().sendMessage(Utils.prefix + "Done!");
 					}
-					WorldModify.builderSessions.remove(this);
-					this.cancel();
-					done = true;
-				}else{
-					if(buildTransparent){
-						if(blockList.size() > 0){
-							i = blockList.iterator();
-							buildTransparent = false;
-						}else{
-							i = transparent.iterator();
-						}
-					}else{
-						i = transparent.iterator();
-						buildTransparent = true;
+					if(saveUndo) commanderSession.addToHistory(replaced);
+				}
+				WorldModify.builderSessions.remove(this);
+				this.cancel();
+				done = true;
+			} else {
+				if(buildTransparent) {
+					if(blockList.size() > 0) {
+						buildTransparent = false;
 					}
+				} else {
+					buildTransparent = true;
 				}
 			}
-			
-		}else{
-			WorldModify.builderSessions.remove(this);
-			this.cancel();
 		}
+		
 	}
 	
 	/**
 	 * Starts the build process
 	 */
-	public void build(){
+	public void build() {
 		done = false;
 		WorldModify.builderSessions.add(this);
 		this.runTaskTimer(WorldModify.plugin, 0L, 1L);
@@ -105,70 +100,77 @@ public class BuilderSession extends BukkitRunnable {
 	/**
 	 * Reverses the block list
 	 */
-	public void reverseList(){
+	public void reverseList() {
 		blockList = Utils.reverseQueue(blockList);
 	}
 	
 	/**
 	 * Checks if the builder is running
-	 * @return Is done 
+	 * 
+	 * @return Is done
 	 */
-	public boolean isDone(){
+	public boolean isDone() {
 		return done;
 	}
 	
 	/**
 	 * Returns the total blocks in the cuboid.
+	 * 
 	 * @return Total blocks
 	 */
-	public Integer getTotalBlocks(){
+	public Integer getTotalBlocks() {
 		return totalBlocks;
 	}
 	
 	/**
 	 * Returns the completed blocks from this cuboid.
+	 * 
 	 * @return Completed blocks
 	 */
-	public Integer getBuiltBlocks(){
+	public Integer getBuiltBlocks() {
 		return builtBlocks;
 	}
 	
 	/**
 	 * Returns the commander who initiated the builder
+	 * 
 	 * @return Player session or null
 	 */
-	public CommanderSession getCommanderSession(){
+	public CommanderSession getCommanderSession() {
 		return commanderSession;
 	}
 	
 	/**
 	 * Returns if the builder is paused
+	 * 
 	 * @return Is paused
 	 */
-	public boolean isPaused(){
+	public boolean isPaused() {
 		return paused;
 	}
 	
 	/**
 	 * Pauses the builder
 	 */
-	public void pause(){
+	public void pause() {
 		paused = true;
 	}
 	
 	/**
 	 * Unpauses the builder
 	 */
-	public void unpause(){
+	public void unpause() {
 		paused = false;
 		build();
 	}
 	
 	/**
 	 * Set whether or not to save an undo
-	 * @param save Save or not
+	 * 
+	 * @param save
+	 *            Save or not
 	 */
-	public void saveUndo(boolean save){
+	public void saveUndo(boolean save) {
 		saveUndo = save;
 	}
 	

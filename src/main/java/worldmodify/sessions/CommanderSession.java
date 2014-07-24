@@ -1,7 +1,7 @@
 package worldmodify.sessions;
 
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -13,7 +13,7 @@ public abstract class CommanderSession {
 
 	private Location pos1;
 	private Location pos2;
-	private Queue<Queue<VirtualBlock>> history = new LinkedList<Queue<VirtualBlock>>();
+	private Stack<Queue<VirtualBlock>> history = new Stack<Queue<VirtualBlock>>();
 	private Queue<VirtualBlock> clipboard;
 	private Vector relativeCopy;
 	private Location copyLocation;
@@ -62,7 +62,7 @@ public abstract class CommanderSession {
 	 * Returns the player history
 	 * @return Returns history
 	 */
-	public Queue<Queue<VirtualBlock>> getHistory(){
+	public Stack<Queue<VirtualBlock>> getHistory(){
 		return history;
 	}
 	
@@ -87,8 +87,7 @@ public abstract class CommanderSession {
 	 */
 	public BuilderSession undoHistory(){
 		if(history.size() > 0){
-			BuilderSession bs = WMBukkit.makeBuilderSession(history.remove(), this);
-			history.remove(history.size() - 1);
+			BuilderSession bs = WMBukkit.makeBuilderSession(history.pop(), this);
 			return bs;
 		}
 		return null;
