@@ -1,6 +1,6 @@
 package worldmodify.scanner;
 
-import java.util.List;
+import java.util.Queue;
 
 import org.bukkit.block.Block;
 
@@ -21,6 +21,6 @@ public interface ScannerRunner {
 	 * 
 	 * @param blockList The list of scanned blocks
 	 */
-	public void onFinish(List<VirtualBlock> blockList);
+	public void onFinish(Queue<VirtualBlock> blockList);
 	
 }

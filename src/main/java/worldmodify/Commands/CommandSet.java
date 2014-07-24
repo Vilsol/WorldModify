@@ -1,6 +1,6 @@
 package worldmodify.Commands;
 
-import java.util.List;
+import java.util.Queue;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -26,7 +26,7 @@ public class CommandSet implements CommandExecutor {
 				PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
 				if(ps.hasSetPos()){
 					VirtualBlock vb = new VirtualBlock(Material.getMaterial(Integer.parseInt(args[0])));
-					List<VirtualBlock> blockList = WMBukkit.getVirtualCuboid(ps, vb);
+					Queue<VirtualBlock> blockList = WMBukkit.getVirtualCuboid(ps, vb);
 					BuilderSession bs = WMBukkit.makeBuilderSession(blockList, ps);
 					if(Integer.parseInt(args[0]) == 0) bs.reverseList();
 					bs.build();

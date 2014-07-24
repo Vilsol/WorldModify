@@ -1,6 +1,6 @@
 package worldmodify.Commands;
 
-import java.util.List;
+import java.util.Queue;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -49,7 +49,7 @@ public class CommandCopy implements CommandExecutor, ScannerRunner {
 	}
 
 	@Override
-	public void onFinish(List<VirtualBlock> blockList) {
+	public void onFinish(Queue<VirtualBlock> blockList) {
 		ps.addToHistory(blockList);
 		ps.getPlayer().sendMessage(Utils.prefix + "Blocks copied!");
 	}

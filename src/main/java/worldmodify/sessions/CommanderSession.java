@@ -1,7 +1,7 @@
 package worldmodify.sessions;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -13,8 +13,8 @@ public abstract class CommanderSession {
 
 	private Location pos1;
 	private Location pos2;
-	private List<List<VirtualBlock>> history = new ArrayList<List<VirtualBlock>>();
-	private List<VirtualBlock> clipboard;
+	private Queue<Queue<VirtualBlock>> history = new LinkedList<Queue<VirtualBlock>>();
+	private Queue<VirtualBlock> clipboard;
 	private Vector relativeCopy;
 	private Location copyLocation;
 	
@@ -62,7 +62,7 @@ public abstract class CommanderSession {
 	 * Returns the player history
 	 * @return Returns history
 	 */
-	public List<List<VirtualBlock>> getHistory(){
+	public Queue<Queue<VirtualBlock>> getHistory(){
 		return history;
 	}
 	
@@ -70,7 +70,7 @@ public abstract class CommanderSession {
 	 * Adds a block list to the player history 
 	 * @param blockList VirtualBlock list
 	 */
-	public void addToHistory(List<VirtualBlock> blockList){
+	public void addToHistory(Queue<VirtualBlock> blockList){
 		history.add(blockList);
 	}
 	
@@ -86,8 +86,8 @@ public abstract class CommanderSession {
 	 * @return Last undo or null
 	 */
 	public BuilderSession undoHistory(){
-		if(history.size() > 0 && history.get(history.size() - 1) != null){
-			BuilderSession bs = WMBukkit.makeBuilderSession(history.get(history.size() - 1), this);
+		if(history.size() > 0){
+			BuilderSession bs = WMBukkit.makeBuilderSession(history.remove(), this);
 			history.remove(history.size() - 1);
 			return bs;
 		}
@@ -106,7 +106,7 @@ public abstract class CommanderSession {
 	 * Returns the players clipboard
 	 * @return List of blocks in clipboard
 	 */
-	public List<VirtualBlock> getClipboard(){
+	public Queue<VirtualBlock> getClipboard(){
 		return clipboard;
 	}
 	
@@ -114,7 +114,7 @@ public abstract class CommanderSession {
 	 * Sets the clipboard
 	 * @param blockList List containing clipboard
 	 */
-	public void setClipboard(List<VirtualBlock> blockList){
+	public void setClipboard(Queue<VirtualBlock> blockList){
 		clipboard = blockList;
 	}
 	

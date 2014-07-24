@@ -1,8 +1,8 @@
 package worldmodify.sessions;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -10,23 +10,21 @@ import worldmodify.WorldModify;
 import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualBlock;
 
-import com.google.common.collect.Lists;
-
 public class BuilderSession extends BukkitRunnable {
 
-	private List<VirtualBlock> blockList;
+	private Queue<VirtualBlock> blockList;
 	private boolean done = false;
 	private Integer totalBlocks;
 	private Integer builtBlocks = 0;
 	private boolean paused = false;
 	private CommanderSession commanderSession;
-	private List<VirtualBlock> replaced = new ArrayList<VirtualBlock>();
-	private List<VirtualBlock> transparent = new ArrayList<VirtualBlock>();
+	private Queue<VirtualBlock> replaced = new LinkedList<VirtualBlock>();
+	private Queue<VirtualBlock> transparent = new LinkedList<VirtualBlock>();
 	private boolean saveUndo = true;
 	private boolean buildTransparent = false;
 	Iterator<VirtualBlock> i;
 
-	public BuilderSession(List<VirtualBlock> vb, CommanderSession cs) {
+	public BuilderSession(Queue<VirtualBlock> vb, CommanderSession cs) {
 		totalBlocks = vb.size();
 		blockList = vb;
 		commanderSession = cs;
@@ -108,7 +106,7 @@ public class BuilderSession extends BukkitRunnable {
 	 * Reverses the block list
 	 */
 	public void reverseList(){
-		blockList = Lists.reverse(blockList);
+		blockList = Utils.reverseQueue(blockList);
 	}
 	
 	/**

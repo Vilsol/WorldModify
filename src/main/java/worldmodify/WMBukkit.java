@@ -1,7 +1,7 @@
 package worldmodify;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -23,7 +23,7 @@ public class WMBukkit {
 	 * @param commanderSession Commander session
 	 * @return The placer session
 	 */
-	public static BuilderSession makeBuilderSession(List<VirtualBlock> vb, CommanderSession cs) {
+	public static BuilderSession makeBuilderSession(Queue<VirtualBlock> vb, CommanderSession cs) {
 		BuilderSession bs = new BuilderSession(vb, cs);
 		return bs;
 	}
@@ -36,8 +36,8 @@ public class WMBukkit {
 	 * @param vb The virtual block to be filled with
 	 * @return List of virtual blocks
 	 */
-	public static List<VirtualBlock> getVirtualCuboid(Location pos1, Location pos2, VirtualBlock vb) {
-		List<VirtualBlock> blockList = new ArrayList<VirtualBlock>();
+	public static Queue<VirtualBlock> getVirtualCuboid(Location pos1, Location pos2, VirtualBlock vb) {
+		Queue<VirtualBlock> blockList = new LinkedList<VirtualBlock>();
 		Location low = Utils.getLowPoint(pos1, pos2);
 		Location high = Utils.getHighestPoint(pos1, pos2);
 		for(int Y = low.getBlockY(); Y <= high.getBlockY(); Y++) {
@@ -60,7 +60,7 @@ public class WMBukkit {
 	 * @param vb The virtual block to be filled with
 	 * @return List of virtual blocks
 	 */
-	public static List<VirtualBlock> getVirtualCuboid(CommanderSession cs, VirtualBlock vb) {
+	public static Queue<VirtualBlock> getVirtualCuboid(CommanderSession cs, VirtualBlock vb) {
 		return WMBukkit.getVirtualCuboid(cs.getPos1(), cs.getPos2(), vb);
 	}
 	

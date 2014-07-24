@@ -1,6 +1,6 @@
 package worldmodify.Commands;
 
-import java.util.List;
+import java.util.Queue;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -27,7 +27,7 @@ public class CommandPaste implements CommandExecutor {
 				if(ps.getClipboard() != null){
 					if(ps.getRelativeCopy() != null){
 						Location lowPoint = plr.getLocation().add(ps.getRelativeCopy());
-						List<VirtualBlock> newList = Utils.alterBlockPosition(ps.getClipboard(), Utils.getRelativeCoords(lowPoint, ps.getCopyLocation()));
+						Queue<VirtualBlock> newList = Utils.alterBlockPosition(ps.getClipboard(), Utils.getRelativeCoords(lowPoint, ps.getCopyLocation()));
 						BuilderSession bs = new BuilderSession(newList, ps);
 						bs.build();
 						PlayerNotify pn = new PlayerNotify((Player) sender, bs);

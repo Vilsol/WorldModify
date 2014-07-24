@@ -1,7 +1,7 @@
 package worldmodify.Commands;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,7 +25,7 @@ public class CommandReplace implements CommandExecutor, ScannerRunner {
 
 	private Material replacing;
 	private Material replacement;
-	private List<VirtualBlock> replaced = new ArrayList<VirtualBlock>();
+	private Queue<VirtualBlock> replaced = new LinkedList<VirtualBlock>();
 	private PlayerSession ps;
 	
 	@SuppressWarnings("deprecation")
@@ -64,7 +64,7 @@ public class CommandReplace implements CommandExecutor, ScannerRunner {
 	}
 
 	@Override
-	public void onFinish(List<VirtualBlock> blockList) {
+	public void onFinish(Queue<VirtualBlock> blockList) {
 		BuilderSession bs = WMBukkit.makeBuilderSession(replaced, ps);
 		if(Utils.isTransparent(new VirtualBlock(replacing))) bs.reverseList();
 		bs.build();

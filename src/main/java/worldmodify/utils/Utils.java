@@ -1,6 +1,5 @@
 package worldmodify.utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -261,8 +262,8 @@ public class Utils {
 	 * @param difference Vector with difference
 	 * @return Altered list of blocks
 	 */
-	public static List<VirtualBlock> alterBlockPosition(List<VirtualBlock> blockList, Vector difference){
-		List<VirtualBlock> newList = new ArrayList<VirtualBlock>();
+	public static Queue<VirtualBlock> alterBlockPosition(Queue<VirtualBlock> blockList, Vector difference){
+		Queue<VirtualBlock> newList = new LinkedList<VirtualBlock>();
 		for(VirtualBlock vb : blockList){
 			VirtualBlock vbs = new VirtualBlock(vb);
 			vbs.setLocation(new Location(vb.getLocation().getWorld(), vb.getLocation().getBlockX(), vb.getLocation().getBlockY(), vb.getLocation().getBlockZ()).add(difference));
@@ -300,4 +301,13 @@ public class Utils {
 	public static boolean pluginHasSession(Plugin plugin) {
 		return (WorldModify.pluginSessions.containsKey(plugin));
 	}
+	
+	public static <T> Queue<T> reverseQueue(Queue<T> src){
+		Queue<T> dest = new LinkedList<T>();
+		Stack<T> s = new Stack<T>();
+		while(src.peek() != null) s.add(src.remove());
+		while(s.size() > 0) dest.add(s.pop());
+	    return dest;
+	}
+	
 }

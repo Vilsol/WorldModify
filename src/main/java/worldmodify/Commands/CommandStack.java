@@ -1,8 +1,8 @@
 package worldmodify.Commands;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -28,7 +28,7 @@ public class CommandStack implements CommandExecutor, ScannerRunner {
 	private int altery = 0;
 	private int alterz = 0;
 	private int times = 1;
-	private List<VirtualBlock> stackingBlocks = new ArrayList<VirtualBlock>();
+	private Queue<VirtualBlock> stackingBlocks = new LinkedList<VirtualBlock>();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
@@ -80,7 +80,7 @@ public class CommandStack implements CommandExecutor, ScannerRunner {
 	}
 
 	@Override
-	public void onFinish(List<VirtualBlock> blockList) {
+	public void onFinish(Queue<VirtualBlock> blockList) {
 		BuilderSession bs = WMBukkit.makeBuilderSession(stackingBlocks, ps);
 		bs.build();
 		PlayerNotify pn = new PlayerNotify(ps.getPlayer(), bs);

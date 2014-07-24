@@ -1,7 +1,7 @@
 package worldmodify.scanner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,7 +20,7 @@ public class Scanner extends BukkitRunnable {
 	private ScannerRunner returnClass;
 	private boolean announceProgress;
 	private CommanderSession cs;
-	private List<VirtualBlock> blockList = new ArrayList<VirtualBlock>();
+	private Queue<VirtualBlock> blockList = new LinkedList<VirtualBlock>();
 	private int yMod = 0;
 	private int xMod = 0;
 	private int zMod = 0;

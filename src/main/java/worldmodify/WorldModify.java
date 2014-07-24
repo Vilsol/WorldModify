@@ -10,8 +10,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
 
-import worldmodify.Metrics.Graph;
 import worldmodify.Commands.CommandCopy;
 import worldmodify.Commands.CommandDistr;
 import worldmodify.Commands.CommandLimit;
