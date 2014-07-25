@@ -1,6 +1,5 @@
 package worldmodify;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,20 +9,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
-import org.mcstats.Metrics.Graph;
 
-import worldmodify.Commands.CommandCopy;
-import worldmodify.Commands.CommandDistr;
-import worldmodify.Commands.CommandLimit;
-import worldmodify.Commands.CommandPaste;
-import worldmodify.Commands.CommandPos1;
-import worldmodify.Commands.CommandPos2;
-import worldmodify.Commands.CommandReplace;
-import worldmodify.Commands.CommandReplacenear;
-import worldmodify.Commands.CommandSet;
-import worldmodify.Commands.CommandStack;
-import worldmodify.Commands.CommandUndo;
+import worldmodify.Commands.CommandManager;
+import worldmodify.Commands.Copy;
+import worldmodify.Commands.Distr;
+import worldmodify.Commands.Help;
+import worldmodify.Commands.Limit;
+import worldmodify.Commands.Paste;
+import worldmodify.Commands.Pos1;
+import worldmodify.Commands.Pos2;
+import worldmodify.Commands.Replace;
+import worldmodify.Commands.Replacenear;
+import worldmodify.Commands.Set;
+import worldmodify.Commands.Stack;
+import worldmodify.Commands.Undo;
 import worldmodify.listeners.PlayerListener;
 import worldmodify.sessions.BuilderSession;
 import worldmodify.sessions.PlayerSession;
@@ -45,40 +44,25 @@ public class WorldModify extends JavaPlugin {
 		config = this.getConfig();
 		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		listConfig();
-		loadMetrics();
+		
+		CommandManager.init(this);
+		
 		initCommands();
 	}
 
 	private void initCommands() {
-		getCommand(".limit").setExecutor(new CommandLimit());
-		getCommand(".pos1").setExecutor(new CommandPos1());
-		getCommand(".pos2").setExecutor(new CommandPos2());
-		getCommand(".replace").setExecutor(new CommandReplace());
-		getCommand(".set").setExecutor(new CommandSet());
-		getCommand(".undo").setExecutor(new CommandUndo());
-		getCommand(".replacenear").setExecutor(new CommandReplacenear());
-		getCommand(".stack").setExecutor(new CommandStack());
-		getCommand(".copy").setExecutor(new CommandCopy());
-		getCommand(".paste").setExecutor(new CommandPaste());
-		getCommand(".distr").setExecutor(new CommandDistr());
-	}
-
-	private void loadMetrics() {
-		try {
-		    Metrics metrics = new Metrics(this);
-		    
-		    Graph globalLimit = metrics.createGraph("Global block limit");
-		    globalLimit.addPlotter(new Metrics.Plotter() {
-				@Override
-				public int getValue() {
-					return limit;
-				}
-			});
-		    
-		    metrics.start();
-		} catch (IOException e) {
-		    getLogger().warning("Metrics failed to load!");
-		}
+		CommandManager.instance.addCommand(new Help());
+		CommandManager.instance.addCommand(new Pos1());
+		CommandManager.instance.addCommand(new Pos2());
+		CommandManager.instance.addCommand(new Limit());
+		CommandManager.instance.addCommand(new Replace());
+		CommandManager.instance.addCommand(new Set());
+		CommandManager.instance.addCommand(new Undo());
+		CommandManager.instance.addCommand(new Replacenear());
+		CommandManager.instance.addCommand(new Stack());
+		CommandManager.instance.addCommand(new Copy());
+		CommandManager.instance.addCommand(new Paste());
+		CommandManager.instance.addCommand(new Distr());
 	}
 
 	private void listConfig() {
