@@ -6,9 +6,6 @@ import java.util.Queue;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -22,7 +19,11 @@ import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
 
-public class CommandReplacenear implements CommandExecutor, ScannerRunner {
+public class Replacenear extends CommandBase implements ScannerRunner {
+
+	public Replacenear() {
+		super(".replacenear", "<distance> <block> <newblock>", "wm.replacenear");
+	}
 
 	private Material replacing;
 	private Material replacement;
@@ -30,48 +31,50 @@ public class CommandReplacenear implements CommandExecutor, ScannerRunner {
 	private PlayerSession ps;
 
 	@SuppressWarnings("deprecation")
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
-		if(!sender.hasPermission("wm.replacenear")) return Utils.noPerms(sender);
-		if(sender instanceof Player){
-			if(args.length >= 3){
-				if(Utils.isInteger(args[0]) && Integer.parseInt(args[0]) > 0){
-					int distance = Integer.parseInt(args[0]);
-					Player plr = (Player) sender;
-					PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
-					replacing = Material.getMaterial(Integer.parseInt(args[1]));
-					replacement = Material.getMaterial(Integer.parseInt(args[2]));
-					sender.sendMessage(Utils.prefix + "Detecting replacements...");
-					Scanner sc = new Scanner(new VirtualArea(plr.getLocation().add(new Vector(distance, distance, distance)), plr.getLocation().add(new Vector(distance*-1, distance*-1, distance*-1))), this, true, ps);
-					sc.scan();
-				}
+	public void execute(Player player, String[] args) {
+		if (Utils.isInteger(args[0]) && Integer.parseInt(args[0]) > 0) {
+			int distance = Integer.parseInt(args[0]);
+			ps = WMBukkit.getPlayerSession(player);
+			
+			if(Utils.getMaterial(args[1]) == null) {
+				player.sendMessage(Utils.prefixe + "Invalid block for block to replace!");
+				return;
 			}
-		}else{
-			Utils.requirePlayer(sender, "replacenear");
+			
+			if(Utils.getMaterial(args[2]) == null) {
+				player.sendMessage(Utils.prefixe + "Invalid block for replacement block!");
+				return;
+			}
+			
+			replacing = Utils.getMaterial(args[1]);
+			replacement = Utils.getMaterial(args[2]);
+			player.sendMessage(Utils.prefix + "Detecting replacements...");
+			Scanner sc = new Scanner(new VirtualArea(player.getLocation().add(new Vector(distance, distance, distance)), player.getLocation().add(new Vector(distance * -1, distance * -1, distance * -1))), this, true, ps);
+			sc.scan();
 		}
-		return true;
 	}
 
 	@Override
 	public boolean scanBlock(Block block) {
-		if(block.getType().equals(replacing)){
+		if (block.getType().equals(replacing)) {
 			VirtualBlock newBlock = new VirtualBlock(replacement);
 			newBlock.setLocation(new Location(block.getWorld(), block.getX(), block.getY(), block.getZ()));
 			replaced.add(newBlock);
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public void onFinish(Queue<VirtualBlock> blockList) {
 		BuilderSession bs = WMBukkit.makeBuilderSession(replaced, ps);
-		if(Utils.isTransparent(new VirtualBlock(replacing))) bs.reverseList();
+		if (Utils.isTransparent(new VirtualBlock(replacing)))
+			bs.reverseList();
 		bs.build();
 		PlayerNotify pn = new PlayerNotify(ps.getPlayer(), bs);
 		pn.infoMessage();
 		pn.runMessenger();
 		return;
 	}
-	
+
 }

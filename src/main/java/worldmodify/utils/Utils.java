@@ -43,6 +43,24 @@ public class Utils {
 	    }
 	    return true;
 	}
+	
+	/**
+	 * Get the material from a name/id.
+	 * @param name
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public static Material getMaterial(String name) {
+		if(isInteger(name)) {
+			return Material.getMaterial(Integer.parseInt(name));
+		} else {
+			
+			for(Material mat : Material.values()) {
+				if(mat.name().replaceAll("_", "").equalsIgnoreCase(name)) return mat;
+			}
+			return null;
+		}
+	}
 
 	/**
 	 * Takes two locations, combines them and finds the lowest coordinates.
