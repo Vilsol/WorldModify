@@ -1,4 +1,4 @@
-package worldmodify.Commands;
+package worldmodify.commands;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;

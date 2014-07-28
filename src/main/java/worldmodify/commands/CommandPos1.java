@@ -1,4 +1,4 @@
-package worldmodify.Commands;
+package worldmodify.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,19 +9,19 @@ import worldmodify.WMBukkit;
 import worldmodify.sessions.PlayerSession;
 import worldmodify.utils.Utils;
 
-public class CommandDistr  implements CommandExecutor {
+public class CommandPos1 implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
-		if(!sender.hasPermission("wm.distr")) return Utils.noPerms(sender);
+		if(!sender.hasPermission("wm.pos1")) return Utils.noPerms(sender);
 		if(sender instanceof Player){
 			PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
-			if(ps.hasSetPos()){
-				new DistrScanner(ps);
-			}
+			ps.setPos1(((Player) sender).getLocation());
+			sender.sendMessage(Utils.prefix + "Position 1 set!");
 		}else{
-			Utils.requirePlayer(sender, "ditr");
+			Utils.requirePlayer(sender, "pos1");
 		}
 		return true;
 	}
+	
 }

@@ -1,4 +1,4 @@
-package worldmodify.Commands;
+package worldmodify.commands;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import worldmodify.WMBukkit;
 import worldmodify.notifiers.PlayerNotify;
@@ -21,33 +22,32 @@ import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
 
-public class CommandReplace implements CommandExecutor, ScannerRunner {
+public class CommandReplacenear implements CommandExecutor, ScannerRunner {
 
 	private Material replacing;
 	private Material replacement;
 	private Queue<VirtualBlock> replaced = new LinkedList<VirtualBlock>();
 	private PlayerSession ps;
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
-		if(!sender.hasPermission("wm.replace")) return Utils.noPerms(sender);
+		if(!sender.hasPermission("wm.replacenear")) return Utils.noPerms(sender);
 		if(sender instanceof Player){
-			if(args.length >= 2){
-				ps = WMBukkit.getPlayerSession((Player) sender);
-				if(ps.hasSetPos()){
-					replacing = Material.getMaterial(Integer.parseInt(args[0]));
-					replacement = Material.getMaterial(Integer.parseInt(args[1]));
+			if(args.length >= 3){
+				if(Utils.isInteger(args[0]) && Integer.parseInt(args[0]) > 0){
+					int distance = Integer.parseInt(args[0]);
+					Player plr = (Player) sender;
+					PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
+					replacing = Material.getMaterial(Integer.parseInt(args[1]));
+					replacement = Material.getMaterial(Integer.parseInt(args[2]));
 					sender.sendMessage(Utils.prefix + "Detecting replacements...");
-					
-					Scanner sc = new Scanner(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
+					Scanner sc = new Scanner(new VirtualArea(plr.getLocation().add(new Vector(distance, distance, distance)), plr.getLocation().add(new Vector(distance*-1, distance*-1, distance*-1))), this, true, ps);
 					sc.scan();
-				}else{
-					sender.sendMessage(Utils.prefixe + "Please set both positions!");
 				}
 			}
 		}else{
-			Utils.requirePlayer(sender, "replace");
+			Utils.requirePlayer(sender, "replacenear");
 		}
 		return true;
 	}
