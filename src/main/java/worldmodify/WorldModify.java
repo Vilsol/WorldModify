@@ -24,6 +24,8 @@ import worldmodify.commands.CommandReplacenear;
 import worldmodify.commands.CommandSet;
 import worldmodify.commands.CommandStack;
 import worldmodify.commands.CommandUndo;
+import worldmodify.core.commands.CommandModel;
+import worldmodify.core.managers.MultiManager;
 import worldmodify.listeners.PlayerListener;
 import worldmodify.sessions.BuilderSession;
 import worldmodify.sessions.PlayerSession;
@@ -31,6 +33,7 @@ import worldmodify.sessions.PluginSession;
 
 public class WorldModify extends JavaPlugin {
 
+	private static boolean debug = false;
 	public static WorldModify plugin;
 	public static FileConfiguration config;
 	public static Integer sessionCount;
@@ -38,6 +41,7 @@ public class WorldModify extends JavaPlugin {
 	public static Map<Player, PlayerSession> playerSessions = new HashMap<Player, PlayerSession>();
 	public static Map<Plugin, PluginSession> pluginSessions = new HashMap<Plugin, PluginSession>();
 	public static Integer limit = 10;
+	public static MultiManager<CommandModel> commandManager = new MultiManager<CommandModel>();
 	
 	public void onEnable(){
 		loadConfig();
@@ -50,17 +54,17 @@ public class WorldModify extends JavaPlugin {
 	}
 
 	private void initCommands() {
-		getCommand(".limit").setExecutor(new CommandLimit());
-		getCommand(".pos1").setExecutor(new CommandPos1());
-		getCommand(".pos2").setExecutor(new CommandPos2());
-		getCommand(".replace").setExecutor(new CommandReplace());
-		getCommand(".set").setExecutor(new CommandSet());
-		getCommand(".undo").setExecutor(new CommandUndo());
-		getCommand(".replacenear").setExecutor(new CommandReplacenear());
-		getCommand(".stack").setExecutor(new CommandStack());
-		getCommand(".copy").setExecutor(new CommandCopy());
-		getCommand(".paste").setExecutor(new CommandPaste());
-		getCommand(".distr").setExecutor(new CommandDistr());
+		commandManager.registerObject(new CommandLimit());
+		commandManager.registerObject(new CommandPos1());
+		commandManager.registerObject(new CommandPos2());
+		commandManager.registerObject(new CommandReplace());
+		commandManager.registerObject(new CommandSet());
+		commandManager.registerObject(new CommandUndo());
+		commandManager.registerObject(new CommandReplacenear());
+		commandManager.registerObject(new CommandStack());
+		commandManager.registerObject(new CommandCopy());
+		commandManager.registerObject(new CommandPaste());
+		commandManager.registerObject(new CommandDistr());
 	}
 
 	private void loadMetrics() {
@@ -88,6 +92,11 @@ public class WorldModify extends JavaPlugin {
 	private void loadConfig() {
 		saveDefaultConfig();
 		limit = getConfig().getInt("Config.GlobalLimit");
+		debug = getConfig().getBoolean("Config.Debug");
+	}
+	
+	public static void d(Object o){
+		if(debug) WorldModify.plugin.getLogger().info(o.toString());
 	}
 	
 }

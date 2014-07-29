@@ -1,26 +1,21 @@
 package worldmodify.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import worldmodify.WMBukkit;
+import worldmodify.core.commands.CMD;
+import worldmodify.core.commands.CommandModel;
+import worldmodify.core.commands.PlayerCommand;
 import worldmodify.sessions.PlayerSession;
-import worldmodify.utils.Utils;
 
-public class CommandDistr  implements CommandExecutor {
+@CMD(permission = "wm.distr", name = ".distr")
+public class CommandDistr extends CommandModel implements PlayerCommand {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
-		if(!sender.hasPermission("wm.distr")) return Utils.noPerms(sender);
-		if(sender instanceof Player){
-			PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
-			if(ps.hasSetPos()){
-				new DistrScanner(ps);
-			}
-		}else{
-			Utils.requirePlayer(sender, "ditr");
+	public boolean onCommand(Player p, String l, String[] args) {
+		PlayerSession ps = WMBukkit.getPlayerSession(p);
+		if(ps.hasSetPos()){
+			new DistrScanner(ps);
 		}
 		return true;
 	}

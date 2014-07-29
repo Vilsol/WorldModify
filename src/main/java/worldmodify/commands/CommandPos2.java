@@ -1,26 +1,22 @@
 package worldmodify.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import worldmodify.WMBukkit;
+import worldmodify.core.commands.CMD;
+import worldmodify.core.commands.CommandModel;
+import worldmodify.core.commands.PlayerCommand;
 import worldmodify.sessions.PlayerSession;
 import worldmodify.utils.Utils;
 
-public class CommandPos2 implements CommandExecutor {
-
+@CMD(name = ".pos2", permission = "wm.pos2")
+public class CommandPos2 extends CommandModel implements PlayerCommand {
+	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
-		if(!sender.hasPermission("wm.pos2")) return Utils.noPerms(sender);
-		if(sender instanceof Player){
-			PlayerSession ps = WMBukkit.getPlayerSession((Player) sender);
-			ps.setPos2(((Player) sender).getLocation());
-			sender.sendMessage(Utils.prefix + "Position 2 set!");
-		}else{
-			Utils.requirePlayer(sender, "pos2");
-		}
+	public boolean onCommand(Player p, String l, String[] args) {
+		PlayerSession ps = WMBukkit.getPlayerSession(p);
+		ps.setPos2((p).getLocation());
+		p.sendMessage(Utils.prefix + "Position 2 set!");
 		return true;
 	}
 	

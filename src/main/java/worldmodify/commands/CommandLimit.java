@@ -1,30 +1,26 @@
 package worldmodify.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.command.ConsoleCommandSender;
 
 import worldmodify.WorldModify;
+import worldmodify.core.commands.CMD;
+import worldmodify.core.commands.CommandModel;
+import worldmodify.core.commands.ConsoleCommand;
 import worldmodify.utils.Utils;
 
-public class CommandLimit implements CommandExecutor {
-
+@CMD(name = ".limit", permission = "wm.limit")
+public class CommandLimit extends CommandModel implements ConsoleCommand {
+	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
-		if(!sender.hasPermission("wm.limit")) return Utils.noPerms(sender);
-		if(sender instanceof Player){
-			if(args.length >= 1){
-				if(Utils.isInteger(args[0])){
-					WorldModify.limit = Integer.parseInt(args[0]);
-					WorldModify.config.set("Config.GlobalLimit", WorldModify.limit);
-					WorldModify.plugin.saveConfig();
-				}else{
-					sender.sendMessage(Utils.prefixe + "Limit must be a number!");
-				}
+	public boolean onCommand(ConsoleCommandSender s, String l, String[] args) {
+		if(args.length >= 1) {
+			if(Utils.isInteger(args[0])) {
+				WorldModify.limit = Integer.parseInt(args[0]);
+				WorldModify.config.set("Config.GlobalLimit", WorldModify.limit);
+				WorldModify.plugin.saveConfig();
+			} else {
+				s.sendMessage(Utils.prefixe + "Limit must be a number!");
 			}
-		}else{
-			Utils.requirePlayer(sender, "limit");
 		}
 		return true;
 	}

@@ -119,7 +119,7 @@ public class Scanner extends BukkitRunnable {
 		checked += current;
 		
 		if(checked >= totalBlocks) {
-			returnClass.onFinish(blockList);
+			returnClass.onFinish(blockList, cs);
 			this.cancel();
 		}
 		

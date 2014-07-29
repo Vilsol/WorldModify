@@ -4,54 +4,48 @@ import java.util.Queue;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import worldmodify.WMBukkit;
+import worldmodify.core.commands.CMD;
+import worldmodify.core.commands.CommandModel;
+import worldmodify.core.commands.PlayerCommand;
 import worldmodify.scanner.Scanner;
 import worldmodify.scanner.ScannerRunner;
+import worldmodify.sessions.CommanderSession;
 import worldmodify.sessions.PlayerSession;
 import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
 
-public class CommandCopy implements CommandExecutor, ScannerRunner {
+@CMD(name = ".copy", permission = "wm.copy")
+public class CommandCopy extends CommandModel implements PlayerCommand, ScannerRunner {
 
-	private PlayerSession ps;
-	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
-		if(!sender.hasPermission("wm.copy")) return Utils.noPerms(sender);
-		if(sender instanceof Player){
-			Player plr = (Player) sender;
-			ps = WMBukkit.getPlayerSession(plr);
-			if(ps.hasSetPos()){
-				boolean excludeAir = Utils.arrContains(args, "-a");
-				Location low = Utils.getLowPoint(ps.getPos1(), ps.getPos2());
-				ps.setRelativeCopy(Utils.getRelativeCoords(low, plr.getLocation()));
-				ps.setCopyLocation(Utils.getLowPoint(ps.getPos1(), ps.getPos2()));
-				
-				Scanner sc = new Scanner(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
-				sc.setExcludeAir(excludeAir);
-				sc.scan();
-			}
-		}else{
-			Utils.requirePlayer(sender, "copy");
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs) {
+		cs.addToHistory(blockList);
+		((PlayerSession) cs).getPlayer().sendMessage(Utils.prefix + "Blocks copied!");
+	}
+
+	@Override
+	public boolean onCommand(Player p, String l, String[] args) {
+		PlayerSession ps = WMBukkit.getPlayerSession(p);
+		if(ps.hasSetPos()){
+			boolean excludeAir = Utils.arrContains(args, "-a");
+			Location low = Utils.getLowPoint(ps.getPos1(), ps.getPos2());
+			ps.setRelativeCopy(Utils.getRelativeCoords(low, p.getLocation()));
+			ps.setCopyLocation(Utils.getLowPoint(ps.getPos1(), ps.getPos2()));
+			
+			Scanner sc = new Scanner(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
+			sc.setExcludeAir(excludeAir);
+			sc.scan();
 		}
 		return true;
 	}
-
+	
 	@Override
 	public boolean scanBlock(Block block) {
 		return false;
-	}
-
-	@Override
-	public void onFinish(Queue<VirtualBlock> blockList) {
-		ps.addToHistory(blockList);
-		ps.getPlayer().sendMessage(Utils.prefix + "Blocks copied!");
 	}
 
 }

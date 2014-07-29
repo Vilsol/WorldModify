@@ -1,2 +1,3 @@
 Config:
   GlobalLimit: 5000
+  Debug: false

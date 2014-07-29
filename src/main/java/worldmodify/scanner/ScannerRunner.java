@@ -4,6 +4,7 @@ import java.util.Queue;
 
 import org.bukkit.block.Block;
 
+import worldmodify.sessions.CommanderSession;
 import worldmodify.utils.VirtualBlock;
 
 public interface ScannerRunner {
@@ -21,6 +22,6 @@ public interface ScannerRunner {
 	 * 
 	 * @param blockList The list of scanned blocks
 	 */
-	public void onFinish(Queue<VirtualBlock> blockList);
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs);
 	
 }
