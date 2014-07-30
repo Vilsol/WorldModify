@@ -22,6 +22,6 @@ public interface ScannerRunner {
 	 * 
 	 * @param blockList The list of scanned blocks
 	 */
-	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs);
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Scanner s);
 	
 }

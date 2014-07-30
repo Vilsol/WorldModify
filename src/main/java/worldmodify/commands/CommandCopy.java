@@ -22,7 +22,7 @@ import worldmodify.utils.VirtualBlock;
 public class CommandCopy extends CommandModel implements PlayerCommand, ScannerRunner {
 
 	@Override
-	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs) {
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Scanner s) {
 		System.out.println(blockList.size());
 		cs.setClipboard(blockList);
 		((PlayerSession) cs).getPlayer().sendMessage(Utils.prefix + "Blocks copied!");

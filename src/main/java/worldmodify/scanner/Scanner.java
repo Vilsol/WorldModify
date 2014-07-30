@@ -25,7 +25,6 @@ public class Scanner extends BukkitRunnable {
 	private int xMod = 0;
 	private int zMod = 0;
 	private int totalScanned = 0;
-	private int totalCopied = 0;
 	private int announceWaiter = 0;
 	private int bonusX = 0;
 	private int bonusY = 0;
@@ -34,6 +33,7 @@ public class Scanner extends BukkitRunnable {
 	private Location high;
 	private Location low;
 	private boolean excludeAir = false;
+	private Object returnData;
 	
 	public Scanner(VirtualArea area, ScannerRunner returnClass, boolean announceProgress, CommanderSession cs) {
 		this.returnClass = returnClass;
@@ -73,6 +73,14 @@ public class Scanner extends BukkitRunnable {
 		this.announceProgress = announceProgress;
 	}
 	
+	public void setReturnData(Object o){
+		this.returnData = o;
+	}
+	
+	public Object getReturnData(){
+		return returnData;
+	}
+	
 	/**
 	 * Starts the scanner. Do not use .run()!
 	 */
@@ -104,7 +112,6 @@ public class Scanner extends BukkitRunnable {
 	
 						stop = returnClass.scanBlock(vb.getBlock());
 						blockList.add(vb);
-						totalCopied++;
 					}
 					zMod = low.getBlockZ();
 				}
@@ -135,7 +142,7 @@ public class Scanner extends BukkitRunnable {
 		}
 		
 		if(totalScanned >= totalBlocks) {
-			returnClass.onFinish(blockList, cs);
+			returnClass.onFinish(blockList, cs, this);
 			this.cancel();
 		}
 		

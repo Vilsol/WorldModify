@@ -41,7 +41,7 @@ public class CommandReplace extends CommandModel implements PlayerCommand, Scann
 	}
 
 	@Override
-	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs) {
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Scanner s) {
 		BuilderSession bs = WMBukkit.makeBuilderSession(replaced, cs);
 		if(Utils.isTransparent(new VirtualBlock(replacing))) bs.reverseList();
 		bs.build();
