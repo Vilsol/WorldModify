@@ -16,6 +16,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
@@ -212,6 +213,18 @@ public class Utils {
 	 */
 	public static int dirToInt(float dir){
 		return Math.round(dir / 45f);
+	}
+	
+	public static BlockFace dirToFace(float dir){
+		if(dir < 0) dir += 360;
+		if(dir >= 337.5 || dir <= 22.5) return BlockFace.SOUTH;
+		if(dir >= 22.5 && dir <= 67.5) return BlockFace.SOUTH_WEST;
+		if(dir >= 67.5 && dir <= 112.5) return BlockFace.WEST;
+		if(dir >= 112.5 && dir <= 157.5) return BlockFace.NORTH_WEST;
+		if(dir >= 157.5 && dir <= 202.5) return BlockFace.NORTH;
+		if(dir >= 202.5 && dir <= 247.5) return BlockFace.NORTH_EAST;
+		if(dir >= 247.5 && dir <= 292.5) return BlockFace.EAST;
+		return BlockFace.SOUTH_EAST;
 	}
 	
 	/**

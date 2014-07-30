@@ -6,6 +6,7 @@ import java.util.Queue;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import worldmodify.WMBukkit;
@@ -19,6 +20,7 @@ import worldmodify.scanner.ScannerRunner;
 import worldmodify.sessions.BuilderSession;
 import worldmodify.sessions.CommanderSession;
 import worldmodify.sessions.PlayerSession;
+import worldmodify.utils.Pitch;
 import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
@@ -64,21 +66,25 @@ public class CommandStack extends CommandModel implements PlayerCommand, Scanner
 			}else{
 				d.times = 1;
 			}
-			int pi = Utils.dirToInt(p.getLocation().getPitch());
-			int ya = Utils.dirToInt(p.getLocation().getYaw());
+
+			System.out.println(p.getLocation().getPitch());
+			System.out.println(p.getLocation().getYaw());
+			
+			Pitch pi = Pitch.pitchToPitch(p.getLocation().getPitch());
+			BlockFace ya = Utils.dirToFace(p.getLocation().getYaw());
 			
 			final Map<String, Integer> size = Utils.getSelectionSize(ps.getPos1(), ps.getPos2());
 
-			if(pi == -1 || pi == 0 || pi == 1){
-				if(ya == 5 || ya == 6 || ya == 7) d.alterx = size.get("xSize"); 
-				if(ya == 1 || ya == 2 || ya == 3) d.alterx = size.get("xSize") * -1; 
+			if(pi == Pitch.DOWN_DIAGONAL || pi == Pitch.STRAIGHT || pi == Pitch.UP_DIAGONAL){
+				if(ya == BlockFace.EAST || ya == BlockFace.NORTH_EAST || ya == BlockFace.SOUTH_EAST) d.alterx = size.get("xSize"); 
+				if(ya == BlockFace.WEST || ya == BlockFace.NORTH_WEST || ya == BlockFace.SOUTH_WEST) d.alterx = size.get("xSize") * -1; 
 				
-				if(ya == 0 || ya == 1 || ya == 7 || ya == 8) d.alterz = size.get("zSize");
-				if(ya == 3 || ya == 4 || ya == 5) d.alterz = size.get("zSize") * -1;
+				if(ya == BlockFace.SOUTH || ya == BlockFace.SOUTH_EAST || ya == BlockFace.SOUTH_WEST) d.alterz = size.get("zSize");
+				if(ya == BlockFace.NORTH || ya == BlockFace.NORTH_EAST || ya == BlockFace.NORTH_WEST) d.alterz = size.get("zSize") * -1;
 			}
 
-			if(pi == -1 || pi == -2) d.altery = size.get("ySize");
-			if(pi == 1 || pi == 2) d.altery = size.get("ySize") * -1;
+			if(pi == Pitch.UP || pi == Pitch.UP_DIAGONAL) d.altery = size.get("ySize");
+			if(pi == Pitch.DOWN || pi == Pitch.DOWN_DIAGONAL) d.altery = size.get("ySize") * -1;
 
 			p.sendMessage(Utils.prefix + "Scanning area...");
 			

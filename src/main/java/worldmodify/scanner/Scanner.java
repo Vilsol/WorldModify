@@ -87,7 +87,7 @@ public class Scanner extends BukkitRunnable {
 	@Override
 	public void run() {
 		boolean stop = false;
-		int localLimit = (Utils.getLocalLimit() * 5 >= 1000) ? Utils.getLocalLimit() * 5 : 10;
+		int localLimit = (Utils.getLocalLimit() * 5 >= 1000) ? Utils.getLocalLimit() * 5 : 1000;
 		int current = 0;
 		boolean firstRun = true;
 		while(current < localLimit && (current > 0 || firstRun)){
