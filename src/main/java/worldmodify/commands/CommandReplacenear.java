@@ -24,11 +24,10 @@ import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
 
 @CMD(name = ".replacenear", permission = "wm.replacenear")
-public class CommandReplacenear extends CommandModel implements PlayerCommand, ScannerRunner {
+public class CommandReplacenear extends CommandModel implements PlayerCommand, ScannerRunner<ReplaceData> {
 
 	@Override
-	public boolean scanBlock(Block block, Object o) {
-		ReplaceData r = (ReplaceData) o;
+	public boolean scanBlock(Block block, ReplaceData r) {
 		if(block.getType().equals(r.replacing)){
 			VirtualBlock newBlock = new VirtualBlock(r.replacement);
 			newBlock.setLocation(new Location(block.getWorld(), block.getX(), block.getY(), block.getZ()));
@@ -39,8 +38,7 @@ public class CommandReplacenear extends CommandModel implements PlayerCommand, S
 	}
 
 	@Override
-	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Scanner s) {
-		ReplaceData r = (ReplaceData) s.getReturnData();
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, ReplaceData r) {
 		BuilderSession bs = WMBukkit.makeBuilderSession(r.replaced, cs);
 		if(Utils.isTransparent(new VirtualBlock(r.replacing))) bs.reverseList();
 		bs.build();
@@ -61,7 +59,7 @@ public class CommandReplacenear extends CommandModel implements PlayerCommand, S
 				r.replacing = Material.getMaterial(Integer.parseInt(args[1]));
 				r.replacement = Material.getMaterial(Integer.parseInt(args[2]));
 				p.sendMessage(Utils.prefix + "Detecting replacements...");
-				Scanner sc = new Scanner(new VirtualArea(p.getLocation().add(new Vector(distance, distance, distance)), p.getLocation().add(new Vector(distance*-1, distance*-1, distance*-1))), this, true, ps);
+				Scanner<ReplaceData> sc = new Scanner<ReplaceData>(new VirtualArea(p.getLocation().add(new Vector(distance, distance, distance)), p.getLocation().add(new Vector(distance*-1, distance*-1, distance*-1))), this, true, ps);
 				sc.setReturnData(r);
 				sc.scan();
 			}

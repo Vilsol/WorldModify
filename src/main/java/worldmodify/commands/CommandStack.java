@@ -26,18 +26,16 @@ import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
 
 @CMD(name = ".stack", permission = "wm.stack")
-public class CommandStack extends CommandModel implements PlayerCommand, ScannerRunner {
+public class CommandStack extends CommandModel implements PlayerCommand, ScannerRunner<StackData> {
 
 	@Override
-	public boolean scanBlock(Block block, Object o) {
+	public boolean scanBlock(Block block, StackData o) {
 		return false;
 	}
 
 	@Override
-	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Scanner s) {
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, StackData d) {
 		Queue<VirtualBlock> stackingBlocks = new LinkedList<VirtualBlock>();
-		
-		StackData d = (StackData) s.getReturnData();
 		
 		for(VirtualBlock v : blockList) {
 			Block b = v.getBlock();
@@ -87,7 +85,7 @@ public class CommandStack extends CommandModel implements PlayerCommand, Scanner
 			
 			boolean excludeAir = Utils.arrContains(args, "-a");
 
-			Scanner sc = new Scanner(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
+			Scanner<StackData> sc = new Scanner<StackData>(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
 			sc.setExcludeAir(excludeAir);
 			sc.setAnnounceProgress(true);
 			sc.setReturnData(d);

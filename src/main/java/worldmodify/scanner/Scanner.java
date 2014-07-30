@@ -15,9 +15,9 @@ import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
 
-public class Scanner extends BukkitRunnable {
+public class Scanner<T> extends BukkitRunnable {
 	
-	private ScannerRunner returnClass;
+	private ScannerRunner<T> returnClass;
 	private boolean announceProgress;
 	private CommanderSession cs;
 	private Queue<VirtualBlock> blockList = new LinkedList<VirtualBlock>();
@@ -33,9 +33,9 @@ public class Scanner extends BukkitRunnable {
 	private Location high;
 	private Location low;
 	private boolean excludeAir = false;
-	private Object returnData;
+	private T returnData;
 	
-	public Scanner(VirtualArea area, ScannerRunner returnClass, boolean announceProgress, CommanderSession cs) {
+	public Scanner(VirtualArea area, ScannerRunner<T> returnClass, boolean announceProgress, CommanderSession cs) {
 		this.returnClass = returnClass;
 		this.cs = cs;
 		low = Utils.getLowPoint(area.getPos1(), area.getPos2());
@@ -52,8 +52,8 @@ public class Scanner extends BukkitRunnable {
 		if(high.getBlockZ() - zMod >= 1) bonusZ++;
 	}
 	
-	public Scanner(VirtualArea area, ScannerRunner returnClass) {
-		new Scanner(area, returnClass, false, null);
+	public Scanner(VirtualArea area, ScannerRunner<T> returnClass) {
+		new Scanner<T>(area, returnClass, false, null);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class Scanner extends BukkitRunnable {
 		this.announceProgress = announceProgress;
 	}
 	
-	public void setReturnData(Object o){
+	public void setReturnData(T o){
 		this.returnData = o;
 	}
 	
@@ -138,7 +138,7 @@ public class Scanner extends BukkitRunnable {
 		}
 		
 		if(totalScanned >= totalBlocks) {
-			returnClass.onFinish(blockList, cs, this);
+			returnClass.onFinish(blockList, cs, returnData);
 			this.cancel();
 		}
 		

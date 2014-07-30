@@ -7,7 +7,7 @@ import org.bukkit.block.Block;
 import worldmodify.sessions.CommanderSession;
 import worldmodify.utils.VirtualBlock;
 
-public interface ScannerRunner {
+public interface ScannerRunner<T> {
 	
 	/**
 	 * Gets called when the scanner is scanning a block.
@@ -16,13 +16,13 @@ public interface ScannerRunner {
 	 * @param o TODO
 	 * @return If true, the scanner will be cancelled.
 	 */
-	public boolean scanBlock(Block block, Object o);
+	public boolean scanBlock(Block block, T o);
 	
 	/**
 	 * Gets called when the scanner has finished.
 	 * 
 	 * @param blockList The list of scanned blocks
 	 */
-	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Scanner s);
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, T s);
 	
 }

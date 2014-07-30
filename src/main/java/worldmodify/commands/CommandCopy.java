@@ -19,10 +19,10 @@ import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
 
 @CMD(name = ".copy", permission = "wm.copy")
-public class CommandCopy extends CommandModel implements PlayerCommand, ScannerRunner {
+public class CommandCopy extends CommandModel implements PlayerCommand, ScannerRunner<Object> {
 
 	@Override
-	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Scanner s) {
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Object s) {
 		System.out.println(blockList.size());
 		cs.setClipboard(blockList);
 		((PlayerSession) cs).getPlayer().sendMessage(Utils.prefix + "Blocks copied!");
@@ -37,7 +37,7 @@ public class CommandCopy extends CommandModel implements PlayerCommand, ScannerR
 			ps.setRelativeCopy(Utils.getRelativeCoords(low, p.getLocation()));
 			ps.setCopyLocation(Utils.getLowPoint(ps.getPos1(), ps.getPos2()));
 			
-			Scanner sc = new Scanner(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
+			Scanner<Object> sc = new Scanner<Object>(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
 			sc.setExcludeAir(excludeAir);
 			sc.setAnnounceProgress(true);
 			sc.scan();

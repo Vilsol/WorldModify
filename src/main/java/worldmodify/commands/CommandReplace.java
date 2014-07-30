@@ -23,11 +23,10 @@ import worldmodify.utils.VirtualArea;
 import worldmodify.utils.VirtualBlock;
 
 @CMD(name = ".replace", permission = "wm.replace")
-public class CommandReplace extends CommandModel implements PlayerCommand, ScannerRunner {
+public class CommandReplace extends CommandModel implements PlayerCommand, ScannerRunner<ReplaceData> {
 	
 	@Override
-	public boolean scanBlock(Block block, Object o) {
-		ReplaceData r = (ReplaceData) o;
+	public boolean scanBlock(Block block, ReplaceData r) {
 		if(block.getType().equals(r.replacing)){
 			VirtualBlock newBlock = new VirtualBlock(r.replacement);
 			newBlock.setLocation(new Location(block.getWorld(), block.getX(), block.getY(), block.getZ()));
@@ -38,8 +37,7 @@ public class CommandReplace extends CommandModel implements PlayerCommand, Scann
 	}
 
 	@Override
-	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Scanner s) {
-		ReplaceData r = (ReplaceData) s.getReturnData();
+	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, ReplaceData r) {
 		BuilderSession bs = WMBukkit.makeBuilderSession(r.replaced, cs);
 		if(Utils.isTransparent(new VirtualBlock(r.replacing))) bs.reverseList();
 		bs.build();
@@ -60,7 +58,7 @@ public class CommandReplace extends CommandModel implements PlayerCommand, Scann
 				r.replacement = Material.getMaterial(Integer.parseInt(args[1]));
 				p.sendMessage(Utils.prefix + "Detecting replacements...");
 				
-				Scanner sc = new Scanner(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
+				Scanner<ReplaceData> sc = new Scanner<ReplaceData>(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
 				sc.setReturnData(r);
 				sc.scan();
 			}else{
