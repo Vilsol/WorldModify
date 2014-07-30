@@ -23,7 +23,8 @@ public class CommandCopy extends CommandModel implements PlayerCommand, ScannerR
 
 	@Override
 	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs) {
-		cs.addToHistory(blockList);
+		System.out.println(blockList.size());
+		cs.setClipboard(blockList);
 		((PlayerSession) cs).getPlayer().sendMessage(Utils.prefix + "Blocks copied!");
 	}
 
@@ -38,6 +39,7 @@ public class CommandCopy extends CommandModel implements PlayerCommand, ScannerR
 			
 			Scanner sc = new Scanner(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
 			sc.setExcludeAir(excludeAir);
+			sc.setAnnounceProgress(true);
 			sc.scan();
 		}
 		return true;

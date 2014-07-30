@@ -1,6 +1,6 @@
 package worldmodify.commands;
 
-import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.CommandSender;
 
 import worldmodify.WorldModify;
 import worldmodify.core.commands.CMD;
@@ -12,7 +12,7 @@ import worldmodify.utils.Utils;
 public class CommandLimit extends CommandModel implements ConsoleCommand {
 	
 	@Override
-	public boolean onCommand(ConsoleCommandSender s, String l, String[] args) {
+	public boolean onCommand(CommandSender s, String l, String[] args) {
 		if(args.length >= 1) {
 			if(Utils.isInteger(args[0])) {
 				WorldModify.limit = Integer.parseInt(args[0]);

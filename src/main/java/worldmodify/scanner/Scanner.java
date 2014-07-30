@@ -24,7 +24,8 @@ public class Scanner extends BukkitRunnable {
 	private int yMod = 0;
 	private int xMod = 0;
 	private int zMod = 0;
-	private int checked = 0;
+	private int totalScanned = 0;
+	private int totalCopied = 0;
 	private int announceWaiter = 0;
 	private int bonusX = 0;
 	private int bonusY = 0;
@@ -36,8 +37,13 @@ public class Scanner extends BukkitRunnable {
 	
 	public Scanner(VirtualArea area, ScannerRunner returnClass, boolean announceProgress, CommanderSession cs) {
 		this.returnClass = returnClass;
+		this.cs = cs;
 		low = Utils.getLowPoint(area.getPos1(), area.getPos2());
 		high = Utils.getHighestPoint(area.getPos1(), area.getPos2());
+
+		low.getBlock().setType(Material.BEACON);
+		high.getBlock().setType(Material.BEACON);
+		
 		totalBlocks = Utils.getTotalBlocks(low, high);
 		xMod = low.getBlockX();
 		yMod = low.getBlockY();
@@ -63,6 +69,10 @@ public class Scanner extends BukkitRunnable {
 		this.excludeAir = excludeAir;
 	}
 	
+	public void setAnnounceProgress(boolean announceProgress){
+		this.announceProgress = announceProgress;
+	}
+	
 	/**
 	 * Starts the scanner. Do not use .run()!
 	 */
@@ -73,32 +83,40 @@ public class Scanner extends BukkitRunnable {
 	@Override
 	public void run() {
 		boolean stop = false;
-		int localLimit = (Utils.getLocalLimit() * 5 >= 1000) ? Utils.getLocalLimit() * 5 : 1000;
+		int localLimit = (Utils.getLocalLimit() * 5 >= 1000) ? Utils.getLocalLimit() * 5 : 10;
 		int current = 0;
-		firstLoop: for(int Y = yMod; Y < high.getBlockY() + bonusY; Y++) {
-			for(int X = xMod; X < high.getBlockX() + bonusX; X++) {
-				for(int Z = zMod; Z < high.getBlockZ() + bonusZ; Z++) {
-					if(current == localLimit) {
-						yMod = Y;
-						xMod = X;
-						zMod = Z;
-						break firstLoop;
+		boolean firstRun = true;
+		while(current < localLimit && (current > 0 || firstRun)){
+			firstRun = false;
+			firstLoop: for(int Y = yMod; Y < high.getBlockY() + bonusY; Y++) {
+				for(int X = xMod; X < high.getBlockX() + bonusX; X++) {
+					for(int Z = zMod; Z < high.getBlockZ() + bonusZ; Z++) {
+						if(current == localLimit) {
+							yMod = Y;
+							xMod = X;
+							zMod = Z;
+							break firstLoop;
+						}
+	
+						current++;
+						VirtualBlock vb = new VirtualBlock(low.getWorld().getBlockAt(X, Y, Z));
+						if(excludeAir && vb.getMaterial() == Material.AIR) continue;
+	
+						stop = returnClass.scanBlock(vb.getBlock());
+						blockList.add(vb);
+						totalCopied++;
 					}
-					
-					
-					VirtualBlock vb = new VirtualBlock(low.getWorld().getBlockAt(X, Y, Z));
-					if(excludeAir && vb.getMaterial() == Material.AIR) continue;
-					
-					stop = returnClass.scanBlock(vb.getBlock());
-					blockList.add(vb);
-					current++;
+					zMod = low.getBlockZ();
 				}
+				xMod = low.getBlockX();
 			}
 		}
 		
+		totalScanned += current;
+		
 		if(cs != null && announceProgress && announceWaiter == 20 && cs instanceof PlayerSession) {
 			String message = Utils.prefix + "Scanning: [";
-			double filled = Math.floor((((double) checked / totalBlocks) * 100) / 5);
+			double filled = Math.floor((((double) totalScanned / totalBlocks) * 100) / 5);
 			for(int x = 0; x < 20; x++) {
 				if(x < filled) {
 					message += ChatColor.GREEN + "#";
@@ -108,7 +126,7 @@ public class Scanner extends BukkitRunnable {
 					message += ChatColor.RED + "-";
 				}
 			}
-			message += ChatColor.AQUA + "] " + checked + "/" + totalBlocks;
+			message += ChatColor.AQUA + "] " + totalScanned + "/" + totalBlocks;
 			
 			((PlayerSession) cs).getPlayer().sendMessage(message);
 			announceWaiter = 0;
@@ -116,9 +134,7 @@ public class Scanner extends BukkitRunnable {
 			announceWaiter++;
 		}
 		
-		checked += current;
-		
-		if(checked >= totalBlocks) {
+		if(totalScanned >= totalBlocks) {
 			returnClass.onFinish(blockList, cs);
 			this.cancel();
 		}

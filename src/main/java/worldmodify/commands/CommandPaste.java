@@ -24,13 +24,22 @@ public class CommandPaste extends CommandModel implements PlayerCommand {
 		if(ps.hasSetPos()) {
 			if(ps.getClipboard() != null) {
 				if(ps.getRelativeCopy() != null) {
-					Location lowPoint = p.getLocation().add(ps.getRelativeCopy());
-					Queue<VirtualBlock> newList = Utils.alterBlockPosition(ps.getClipboard(), Utils.getRelativeCoords(lowPoint, ps.getCopyLocation()));
-					BuilderSession bs = new BuilderSession(newList, ps);
-					bs.build();
-					PlayerNotify pn = new PlayerNotify(p, bs);
-					pn.infoMessage();
-					pn.runMessenger();
+					boolean fast = Utils.arrContains(args, "-f");
+					if(fast){
+						Location lowPoint = p.getLocation().add(ps.getRelativeCopy());
+						Queue<VirtualBlock> newList = Utils.alterBlockPosition(ps.getClipboard(), Utils.getRelativeCoords(lowPoint, ps.getCopyLocation()));
+						for(VirtualBlock virtualBlock : newList) {
+							virtualBlock.buildBlock();
+						}
+					}else{
+						Location lowPoint = p.getLocation().add(ps.getRelativeCopy());
+						Queue<VirtualBlock> newList = Utils.alterBlockPosition(ps.getClipboard(), Utils.getRelativeCoords(lowPoint, ps.getCopyLocation()));
+						BuilderSession bs = new BuilderSession(newList, ps);
+						bs.build();
+						PlayerNotify pn = new PlayerNotify(p, bs);
+						pn.infoMessage();
+						pn.runMessenger();
+					}
 				}
 			}
 		}

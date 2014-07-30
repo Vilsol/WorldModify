@@ -3,7 +3,6 @@ package worldmodify.core.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 
@@ -46,7 +45,7 @@ public abstract class CommandModel implements CommandExecutor {
 				result = ((PlayerCommand) this).onCommand((Player) sender, label, args);
 			}
 		}else{
-			result = ((ConsoleCommand) this).onCommand((ConsoleCommandSender) sender, label, args);
+			result = ((ConsoleCommand) this).onCommand(sender, label, args);
 		}
 		
 		if(!result){
