@@ -4,7 +4,7 @@
 
 	<groupId>worldmodify</groupId>
 	<artifactId>WorldModify</artifactId>
-	<version>1.0</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 
 	<name>WorldModify</name>
@@ -47,6 +47,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}-${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
