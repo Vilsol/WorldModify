@@ -67,9 +67,6 @@ public class CommandStack extends CommandModel implements PlayerCommand, Scanner
 				d.times = 1;
 			}
 
-			System.out.println(p.getLocation().getPitch());
-			System.out.println(p.getLocation().getYaw());
-			
 			Pitch pi = Pitch.pitchToPitch(p.getLocation().getPitch());
 			BlockFace ya = Utils.dirToFace(p.getLocation().getYaw());
 			
