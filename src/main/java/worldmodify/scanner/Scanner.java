@@ -106,7 +106,7 @@ public class Scanner extends BukkitRunnable {
 						VirtualBlock vb = new VirtualBlock(low.getWorld().getBlockAt(X, Y, Z));
 						if(excludeAir && vb.getMaterial() == Material.AIR) continue;
 	
-						stop = returnClass.scanBlock(vb.getBlock());
+						stop = returnClass.scanBlock(vb.getBlock(), returnData);
 						blockList.add(vb);
 					}
 					zMod = low.getBlockZ();

@@ -46,7 +46,7 @@ public class CommandCopy extends CommandModel implements PlayerCommand, ScannerR
 	}
 	
 	@Override
-	public boolean scanBlock(Block block) {
+	public boolean scanBlock(Block block, Object o) {
 		return false;
 	}
 

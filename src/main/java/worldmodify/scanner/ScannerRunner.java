@@ -13,9 +13,10 @@ public interface ScannerRunner {
 	 * Gets called when the scanner is scanning a block.
 	 * 
 	 * @param block Th block to scan
+	 * @param o TODO
 	 * @return If true, the scanner will be cancelled.
 	 */
-	public boolean scanBlock(Block block);
+	public boolean scanBlock(Block block, Object o);
 	
 	/**
 	 * Gets called when the scanner has finished.

@@ -29,7 +29,7 @@ import worldmodify.utils.VirtualBlock;
 public class CommandStack extends CommandModel implements PlayerCommand, ScannerRunner {
 
 	@Override
-	public boolean scanBlock(Block block) {
+	public boolean scanBlock(Block block, Object o) {
 		return false;
 	}
 
