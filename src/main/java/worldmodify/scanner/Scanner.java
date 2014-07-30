@@ -90,7 +90,7 @@ public class Scanner<T> extends BukkitRunnable {
 		int localLimit = (Utils.getLocalLimit() * 5 >= 1000) ? Utils.getLocalLimit() * 5 : 1000;
 		int current = 0;
 		boolean firstRun = true;
-		while(current < localLimit && (current > 0 || firstRun)){
+		outer: while(current < localLimit && (current > 0 || firstRun)){
 			firstRun = false;
 			firstLoop: for(int Y = yMod; Y < high.getBlockY() + bonusY; Y++) {
 				for(int X = xMod; X < high.getBlockX() + bonusX; X++) {
@@ -101,6 +101,8 @@ public class Scanner<T> extends BukkitRunnable {
 							zMod = Z;
 							break firstLoop;
 						}
+						
+						if(totalScanned + current >= totalBlocks) break outer;
 	
 						current++;
 						VirtualBlock vb = new VirtualBlock(low.getWorld().getBlockAt(X, Y, Z));

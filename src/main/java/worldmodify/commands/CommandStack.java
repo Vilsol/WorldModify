@@ -36,7 +36,6 @@ public class CommandStack extends CommandModel implements PlayerCommand, Scanner
 	@Override
 	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, StackData d) {
 		Queue<VirtualBlock> stackingBlocks = new LinkedList<VirtualBlock>();
-		
 		for(VirtualBlock v : blockList) {
 			Block b = v.getBlock();
 			for(int i = 1; i <= d.times; i++) {
