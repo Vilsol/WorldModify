@@ -40,10 +40,6 @@ public class Scanner extends BukkitRunnable {
 		this.cs = cs;
 		low = Utils.getLowPoint(area.getPos1(), area.getPos2());
 		high = Utils.getHighestPoint(area.getPos1(), area.getPos2());
-
-		low.getBlock().setType(Material.BEACON);
-		high.getBlock().setType(Material.BEACON);
-		
 		totalBlocks = Utils.getTotalBlocks(low, high);
 		xMod = low.getBlockX();
 		yMod = low.getBlockY();
