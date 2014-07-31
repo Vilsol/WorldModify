@@ -93,6 +93,11 @@ public abstract class CommanderSession {
 		return null;
 	}
 	
+	public Queue<VirtualBlock> popHistory(){
+		if(history.size() == 0) return null;
+		return history.pop();
+	}
+	
 	/**
 	 * Returns the relative position from lowest point of the clipboard
 	 * @return Vector with relative coordinates

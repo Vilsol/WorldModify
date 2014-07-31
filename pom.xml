@@ -44,6 +44,12 @@
 			<version>R6</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>me.vilsol</groupId>
+			<artifactId>menuenginebuiltin</artifactId>
+			<version>1.2.1</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -11,6 +11,7 @@ import worldmodify.sessions.BuilderSession;
 import worldmodify.sessions.CommanderSession;
 import worldmodify.sessions.PlayerSession;
 import worldmodify.sessions.PluginSession;
+import worldmodify.tools.Tool;
 import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualBlock;
 
@@ -106,5 +107,9 @@ public class WMBukkit {
 	 */
 	public static PluginSession getPluginSession(Plugin plugin) {
 		return createPluginSession(plugin);
+	}
+
+	public static Tool getTool(Player plr) {
+		return WorldModify.toolManager.getObject(getPlayerSession(plr).getTool());
 	}
 }

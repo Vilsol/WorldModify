@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import worldmodify.R;
 import worldmodify.WorldModify;
 import worldmodify.sessions.PlayerSession;
 import worldmodify.utils.Utils;
@@ -68,7 +69,7 @@ public class DistrScanner {
 				}
 				
 				if(announceWaiter == 20){
-					String message = Utils.prefix + "Scanning: [";
+					String message = R.prefix + "Scanning: [";
 					double filled = Math.floor((( (double) checked / totalBlocks) * 100) / 5);
 					for(int x = 0; x < 20; x++){
 						if(x < filled){
@@ -90,11 +91,11 @@ public class DistrScanner {
 				checked += current;
 				
 				if(checked >= totalBlocks){
-					ps.getPlayer().sendMessage(Utils.prefix + "Block distribution:");
+					ps.getPlayer().sendMessage(R.prefix + "Block distribution:");
 					int count = 1;
 					blockList = Utils.sortByValue(blockList);
 					for(Material m : blockList.keySet()){
-						ps.getPlayer().sendMessage(Utils.prefix + count + ". (" + Double.valueOf(new DecimalFormat("#.##").format((blockList.get(m).doubleValue()/totalBlocks)*100.0)) + "%) " + m.toString() + " - " + blockList.get(m));
+						ps.getPlayer().sendMessage(R.prefix + count + ". (" + Double.valueOf(new DecimalFormat("#.##").format((blockList.get(m).doubleValue()/totalBlocks)*100.0)) + "%) " + m.toString() + " - " + blockList.get(m));
 						count++;
 					}
 					Bukkit.getScheduler().cancelTask(waiter);

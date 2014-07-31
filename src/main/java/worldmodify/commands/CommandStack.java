@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
+import worldmodify.R;
 import worldmodify.WMBukkit;
 import worldmodify.core.commands.CMD;
 import worldmodify.core.commands.CommandModel;
@@ -80,7 +81,7 @@ public class CommandStack extends CommandModel implements PlayerCommand, Scanner
 			if(pi == Pitch.UP || pi == Pitch.UP_DIAGONAL) d.altery = size.get("ySize");
 			if(pi == Pitch.DOWN || pi == Pitch.DOWN_DIAGONAL) d.altery = size.get("ySize") * -1;
 
-			p.sendMessage(Utils.prefix + "Scanning area...");
+			p.sendMessage(R.prefix + "Scanning area...");
 			
 			boolean excludeAir = Utils.arrContains(args, "-a");
 

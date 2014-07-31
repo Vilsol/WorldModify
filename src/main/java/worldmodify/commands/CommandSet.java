@@ -5,6 +5,7 @@ import java.util.Queue;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import worldmodify.R;
 import worldmodify.WMBukkit;
 import worldmodify.core.commands.CMD;
 import worldmodify.core.commands.CommandModel;
@@ -12,7 +13,6 @@ import worldmodify.core.commands.PlayerCommand;
 import worldmodify.notifiers.PlayerNotify;
 import worldmodify.sessions.BuilderSession;
 import worldmodify.sessions.PlayerSession;
-import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualBlock;
 
 @CMD(name = ".set", permission = "wm.set")
@@ -33,7 +33,7 @@ public class CommandSet extends CommandModel implements PlayerCommand {
 				pn.infoMessage();
 				pn.runMessenger();
 			}else{
-				p.sendMessage(Utils.prefixe + "Please set both positions!");
+				p.sendMessage(R.prefixe + "Please set both positions!");
 			}
 		}
 		return true;

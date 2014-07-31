@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import worldmodify.WMBukkit;
 import worldmodify.sessions.PlayerSession;
+import worldmodify.tools.Tool;
 import worldmodify.utils.Utils;
 
 public class PlayerListener implements Listener {
@@ -30,21 +31,17 @@ public class PlayerListener implements Listener {
 		WMBukkit.createPlayerSession(plr);
 		final PlayerSession ps = WMBukkit.getPlayerSession(plr);
 		if(plr.getItemInHand().getType().equals(Material.WOOD_HOE)){
-			Block target = evt.getPlayer().getTargetBlock(null, 100);
+			Block target = evt.getPlayer().getTargetBlock(null, 256);
 			if(!target.isEmpty()){
+				Tool t = WMBukkit.getTool(plr);
+				boolean result = false;
 				if(evt.getAction().equals(Action.RIGHT_CLICK_AIR) || evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-					if(target.getLocation().equals(ps.getPos2())) return;
-					ps.setPos2(target.getLocation());
-					plr.sendMessage(Utils.prefix + "Position 2 set!");
-					Utils.flashBlock(target.getLocation());
-					evt.setCancelled(true);
+					result = t.onToolRightClick(ps, target, evt.getBlockFace());
 				}else if(evt.getAction().equals(Action.LEFT_CLICK_BLOCK) || evt.getAction().equals(Action.LEFT_CLICK_AIR)){
-					if(target.getLocation().equals(ps.getPos1())) return;
-					ps.setPos1(target.getLocation());
-					plr.sendMessage(Utils.prefix + "Position 1 set!");
-					Utils.flashBlock(target.getLocation());
-					evt.setCancelled(true);
+					result = t.onToolLeftClick(ps, target, evt.getBlockFace());
 				}
+				
+				if(result) evt.setCancelled(true);
 			}
 		}
 	}

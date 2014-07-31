@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import worldmodify.R;
 import worldmodify.WorldModify;
 import worldmodify.sessions.CommanderSession;
 import worldmodify.sessions.PlayerSession;
@@ -120,7 +121,7 @@ public class Scanner<T> extends BukkitRunnable {
 		totalScanned += current;
 		
 		if(cs != null && announceProgress && announceWaiter == 20 && cs instanceof PlayerSession) {
-			String message = Utils.prefix + "Scanning: [";
+			String message = R.prefix + "Scanning: [";
 			double filled = Math.floor((((double) totalScanned / totalBlocks) * 100) / 5);
 			for(int x = 0; x < 20; x++) {
 				if(x < filled) {

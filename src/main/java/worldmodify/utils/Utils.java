@@ -32,12 +32,12 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
+import worldmodify.R;
+import worldmodify.WMBukkit;
 import worldmodify.WorldModify;
 
 public class Utils {
 
-	public static String prefix = ChatColor.GOLD + "[WM] " + ChatColor.AQUA;
-	public static String prefixe = ChatColor.GOLD + "[WM] " + ChatColor.DARK_RED;
 	private static List<Material> transparentBlocks = Arrays.asList(Material.ACTIVATOR_RAIL, Material.ANVIL, Material.BED, Material.BED_BLOCK, Material.BROWN_MUSHROOM, Material.CACTUS, Material.CAKE_BLOCK, Material.CROPS, Material.DEAD_BUSH, Material.DETECTOR_RAIL, Material.DIODE, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_OFF, Material.DRAGON_EGG, Material.ITEM_FRAME, Material.LADDER, Material.LAVA, Material.NETHER_WARTS, Material.PAINTING, Material.POWERED_RAIL, Material.RAILS, Material.REDSTONE_COMPARATOR, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON, Material.REDSTONE_WIRE, Material.SAND, Material.SAPLING, Material.SEEDS, Material.SIGN, Material.SIGN_POST, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.SUGAR_CANE_BLOCK, Material.TORCH, Material.TRAP_DOOR, Material.TRIPWIRE, Material.TRIPWIRE_HOOK, Material.VINE, Material.WALL_SIGN, Material.WATER, Material.WATER_LILY, Material.WOOD_DOOR, Material.IRON_DOOR, Material.WOOD_PLATE, Material.STONE_PLATE, Material.GOLD_PLATE, Material.IRON_PLATE, Material.WOOD_BUTTON, Material.STONE_BUTTON, Material.LEVER, Material.GRAVEL, Material.CARROT, Material.POTATO);
 	
 	/**
@@ -180,6 +180,8 @@ public class Utils {
 	public static void flashBlock(Location location) {
 		final Block bl = location.getBlock();
 		final VirtualBlock vb = new VirtualBlock(bl);
+		final Queue<VirtualBlock> flash = new LinkedList<VirtualBlock>();
+		flash.add(vb);
 		if(bl.getState() instanceof InventoryHolder){
 			InventoryHolder ih = (InventoryHolder) bl.getState();
 			ih.getInventory().clear();
@@ -189,7 +191,7 @@ public class Utils {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(WorldModify.plugin, new Runnable(){
 				@Override
 				public void run() {
-					vb.buildBlock();
+					WMBukkit.makeBuilderSession(flash, null).build();
 				}
 			}, 10L);
 		}
@@ -202,7 +204,7 @@ public class Utils {
 	 * @return
 	 */
 	public static void requirePlayer(CommandSender sender, String cmd) {
-		sender.sendMessage(Utils.prefixe + "You must be a player to use " + ChatColor.RED + cmd + ChatColor.DARK_RED + "!");
+		sender.sendMessage(R.prefixe + "You must be a player to use " + ChatColor.RED + cmd + ChatColor.DARK_RED + "!");
 	}
 
 	/**
@@ -211,7 +213,7 @@ public class Utils {
 	 * @return 
 	 */
 	public static boolean noPerms(CommandSender sender) {
-		sender.sendMessage(Utils.prefixe + "You don't have permission to do this command!");
+		sender.sendMessage(R.prefixe + "You don't have permission to do this command!");
 		return true;
 	}
 	

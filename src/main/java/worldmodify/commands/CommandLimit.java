@@ -2,6 +2,7 @@ package worldmodify.commands;
 
 import org.bukkit.command.CommandSender;
 
+import worldmodify.R;
 import worldmodify.WorldModify;
 import worldmodify.core.commands.CMD;
 import worldmodify.core.commands.CommandModel;
@@ -19,7 +20,7 @@ public class CommandLimit extends CommandModel implements ConsoleCommand {
 				WorldModify.config.set("Config.GlobalLimit", WorldModify.limit);
 				WorldModify.plugin.saveConfig();
 			} else {
-				s.sendMessage(Utils.prefixe + "Limit must be a number!");
+				s.sendMessage(R.prefixe + "Limit must be a number!");
 			}
 		}
 		return true;

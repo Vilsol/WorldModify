@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import worldmodify.R;
 import worldmodify.WMBukkit;
 import worldmodify.core.commands.CMD;
 import worldmodify.core.commands.CommandModel;
@@ -58,7 +59,7 @@ public class CommandReplacenear extends CommandModel implements PlayerCommand, S
 				ReplaceData r = new ReplaceData();
 				r.replacing = Material.getMaterial(Integer.parseInt(args[1]));
 				r.replacement = Material.getMaterial(Integer.parseInt(args[2]));
-				p.sendMessage(Utils.prefix + "Detecting replacements...");
+				p.sendMessage(R.prefix + "Detecting replacements...");
 				Scanner<ReplaceData> sc = new Scanner<ReplaceData>(new VirtualArea(p.getLocation().add(new Vector(distance, distance, distance)), p.getLocation().add(new Vector(distance*-1, distance*-1, distance*-1))), this, true, ps);
 				sc.setReturnData(r);
 				sc.scan();

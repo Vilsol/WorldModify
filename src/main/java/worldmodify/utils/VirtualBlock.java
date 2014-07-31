@@ -4,8 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("deprecation")
 public class VirtualBlock {
@@ -13,7 +13,7 @@ public class VirtualBlock {
 	private Location loc;
 	private Material mat;
 	private Byte data;
-	private Inventory inv;
+	private ItemStack[] inv;
 	private BlockState state;
 	
 	public VirtualBlock(VirtualBlock vb) {
@@ -29,7 +29,7 @@ public class VirtualBlock {
 		mat = block.getType();
 		data = block.getData();
 		if(block.getState() instanceof InventoryHolder) {
-			inv = ((InventoryHolder) block.getState()).getInventory();
+			inv = ((InventoryHolder) block.getState()).getInventory().getContents();
 		}
 		
 		if(block.getState() != null) {
@@ -73,7 +73,7 @@ public class VirtualBlock {
 	 * 
 	 * @return Blocks Inventory
 	 */
-	public Inventory getInventory() {
+	public ItemStack[] getInventory() {
 		return inv;
 	}
 	
@@ -117,7 +117,7 @@ public class VirtualBlock {
 	 * @param inventory
 	 *            New inventory
 	 */
-	public void setInventory(Inventory inventory) {
+	public void setInventory(ItemStack[] inventory) {
 		inv = inventory;
 	}
 	
@@ -128,7 +128,7 @@ public class VirtualBlock {
 	/**
 	 * Places the block in the world
 	 */
-	public void buildBlock() {
+	public boolean buildBlock() {
 		if(loc != null) {
 			final Block realBlock = loc.getBlock();
 			if(realBlock.getState() instanceof InventoryHolder) {
@@ -142,11 +142,25 @@ public class VirtualBlock {
 			}
 			if(inv != null) {
 				if(realBlock.getState() instanceof InventoryHolder) {
-					((InventoryHolder) realBlock.getState()).getInventory().setContents(inv.getContents());
+					if(inv.length > ((InventoryHolder) realBlock.getState()).getInventory().getSize()){
+						return true;
+					}else{
+						((InventoryHolder) realBlock.getState()).getInventory().setContents(inv);
+					}
 				}
 			}
 			if(state != null) {
 				Utils.setStates(state, realBlock);
+			}
+		}
+		return false;
+	}
+	
+	public void delayActions(){
+		final Block realBlock = loc.getBlock();
+		if(inv != null) {
+			if(realBlock.getState() instanceof InventoryHolder) {
+				((InventoryHolder) realBlock.getState()).getInventory().setContents(inv);
 			}
 		}
 	}

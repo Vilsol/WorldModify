@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
+import worldmodify.R;
 import worldmodify.WorldModify;
 import worldmodify.utils.Utils;
 import worldmodify.utils.VirtualBlock;
@@ -19,8 +20,10 @@ public class BuilderSession extends BukkitRunnable {
 	private CommanderSession commanderSession;
 	private Queue<VirtualBlock> replaced = new LinkedList<VirtualBlock>();
 	private Queue<VirtualBlock> transparent = new LinkedList<VirtualBlock>();
+	private Queue<VirtualBlock> delayed = new LinkedList<VirtualBlock>();
 	private boolean saveUndo = true;
 	private boolean buildTransparent = false;
+	private boolean buildDelayed = false;
 	
 	public BuilderSession(Queue<VirtualBlock> vb, CommanderSession cs) {
 		totalBlocks = vb.size();
@@ -36,22 +39,42 @@ public class BuilderSession extends BukkitRunnable {
 			return;
 		}
 		
-		Queue<VirtualBlock> q = (buildTransparent) ? transparent : blockList;
+		Queue<VirtualBlock> q = null;
+		if(buildTransparent) {
+			q = transparent;
+		} else if(buildDelayed) {
+			q = delayed;
+		} else {
+			q = blockList;
+		}
+		
 		int blockCount = 0;
 		if(q != null && q.size() > 0) {
 			while(q.size() > 0) {
 				if(Utils.getLocalLimit() == blockCount) break;
 				VirtualBlock vb = q.peek();
 				
+				if(buildDelayed) {
+					vb.delayActions();
+					q.remove();
+					continue;
+				}
+				
 				if(!Utils.isSameVirtualBlock(vb, new VirtualBlock(vb.getLocation().getBlock()))) {
 					if(!Utils.isTransparent(vb)) {
+						boolean delayed = vb.buildBlock();
+						if(delayed) {
+							this.delayed.add(vb);
+						}
 						replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
-						vb.buildBlock();
 						blockCount++;
 					} else {
 						if(buildTransparent) {
+							boolean delayed = vb.buildBlock();
+							if(delayed) {
+								this.delayed.add(vb);
+							}
 							replaced.add(new VirtualBlock(vb.getLocation().getBlock()));
-							vb.buildBlock();
 							blockCount++;
 						} else {
 							transparent.add(vb);
@@ -68,7 +91,7 @@ public class BuilderSession extends BukkitRunnable {
 			if(builtBlocks >= totalBlocks) {
 				if(commanderSession != null) {
 					if(commanderSession instanceof PlayerSession) {
-						((PlayerSession) commanderSession).getPlayer().sendMessage(Utils.prefix + "Done!");
+						((PlayerSession) commanderSession).getPlayer().sendMessage(R.prefix + "Done!");
 					}
 					if(saveUndo) commanderSession.addToHistory(replaced);
 				}
@@ -77,8 +100,12 @@ public class BuilderSession extends BukkitRunnable {
 				done = true;
 			} else {
 				if(buildTransparent) {
-					if(blockList.size() > 0) {
-						buildTransparent = false;
+					if(delayed.size() > 0) {
+						
+					} else {
+						if(blockList.size() > 0) {
+							buildTransparent = false;
+						}
 					}
 				} else {
 					buildTransparent = true;

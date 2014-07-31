@@ -24,3 +24,5 @@ commands:
       usage: /<command>
    .distr:
       usage: /<command>
+   .:
+      usage: /<command>

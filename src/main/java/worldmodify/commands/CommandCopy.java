@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import worldmodify.R;
 import worldmodify.WMBukkit;
 import worldmodify.core.commands.CMD;
 import worldmodify.core.commands.CommandModel;
@@ -23,9 +24,8 @@ public class CommandCopy extends CommandModel implements PlayerCommand, ScannerR
 
 	@Override
 	public void onFinish(Queue<VirtualBlock> blockList, CommanderSession cs, Object s) {
-		System.out.println(blockList.size());
 		cs.setClipboard(blockList);
-		((PlayerSession) cs).getPlayer().sendMessage(Utils.prefix + "Blocks copied!");
+		((PlayerSession) cs).getPlayer().sendMessage(R.prefix + "Blocks copied!");
 	}
 
 	@Override

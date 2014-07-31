@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import worldmodify.R;
 import worldmodify.WMBukkit;
 import worldmodify.core.commands.CMD;
 import worldmodify.core.commands.CommandModel;
@@ -56,13 +57,13 @@ public class CommandReplace extends CommandModel implements PlayerCommand, Scann
 				ReplaceData r = new ReplaceData();
 				r.replacing = Material.getMaterial(Integer.parseInt(args[0]));
 				r.replacement = Material.getMaterial(Integer.parseInt(args[1]));
-				p.sendMessage(Utils.prefix + "Detecting replacements...");
+				p.sendMessage(R.prefix + "Detecting replacements...");
 				
 				Scanner<ReplaceData> sc = new Scanner<ReplaceData>(new VirtualArea(ps.getPos1(), ps.getPos2()), this, true, ps);
 				sc.setReturnData(r);
 				sc.scan();
 			}else{
-				p.sendMessage(Utils.prefixe + "Please set both positions!");
+				p.sendMessage(R.prefixe + "Please set both positions!");
 			}
 		}
 		return true;

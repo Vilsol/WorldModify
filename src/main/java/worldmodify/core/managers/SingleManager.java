@@ -2,7 +2,7 @@ package worldmodify.core.managers;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class SingleManager<T, M> {
+public class SingleManager<T, M> {
 	
 	private ConcurrentHashMap<T, M> objects = new ConcurrentHashMap<T, M>();
 	

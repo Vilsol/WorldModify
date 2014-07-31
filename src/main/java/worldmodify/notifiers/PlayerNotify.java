@@ -5,9 +5,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import worldmodify.R;
 import worldmodify.WorldModify;
 import worldmodify.sessions.BuilderSession;
-import worldmodify.utils.Utils;
 
 public class PlayerNotify {
 
@@ -25,7 +25,7 @@ public class PlayerNotify {
 	 * @return Progress message
 	 */
 	public String getMessage(){
-		String message = Utils.prefix + "Progress: [";
+		String message = R.prefix + "Progress: [";
 		double filled = Math.floor((( (double) bs.getBuiltBlocks() / bs.getTotalBlocks()) * 100) / 5);
 		for(int x = 0; x < 20; x++){
 			if(x < filled){
@@ -60,7 +60,7 @@ public class PlayerNotify {
 	}
 
 	public void infoMessage() {
-		plr.sendMessage(Utils.prefix + "Started a builder with " + ChatColor.GREEN + bs.getTotalBlocks() + ChatColor.AQUA + " blocks!");
+		plr.sendMessage(R.prefix + "Started a builder with " + ChatColor.GREEN + bs.getTotalBlocks() + ChatColor.AQUA + " blocks!");
 	}
 	
 }
